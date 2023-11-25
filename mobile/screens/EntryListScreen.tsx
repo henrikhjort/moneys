@@ -1,18 +1,13 @@
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import EntryList from '../components/EntryList';
 
-import type { Entry } from '../types/Entry';
-
-type EntryListScreenProps = {
-  entries: Entry[];
-}
-
-const EntryListScreen = ({ entries }: EntryListScreenProps) => {
+const EntryListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <EntryList entries={entries} />
+      <EntryList />
     </View>
   );
 }

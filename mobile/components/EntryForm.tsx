@@ -42,7 +42,6 @@ const EntryForm = () => {
         amount: createdEntry.amount,
         category: createdEntry.category,
       };
-      console.log(entry);
       setAmount(null);
       setCategory(null);
       const newEntries = [...entries, entry];
