@@ -3,6 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import EntryList from '../components/EntryList';
 import EntryForm from '../components/EntryForm';
 
+import EntryScreen from './EntryScreen';
+import EntryListScreen from './EntryListScreen';
+
 import { Screen } from '../types/Screen';
 
 import { useAppContext } from '../context/AppContext';
@@ -12,9 +15,9 @@ const BaseScreen = () => {
 
   const renderScreen = () => {
     if (currentScreen === Screen.INPUT) {
-      return <EntryForm />;
+      return <EntryScreen />;
     } else {
-      return <EntryList />;
+      return <EntryListScreen />;
     }
   }
 

@@ -17,8 +17,6 @@ type CategoryPickerProps = {
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled }) => {
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
-  const [leftText, setLeftText] = useState('front');
-  const [rightText, setRightText] = useState('back');
 
   const translateCategory = (category: Category | null) => {
     if (!category) {

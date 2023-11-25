@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, View, StyleSheet, RefreshControl } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import ViewPeriodSelector from './ViewPeriodSelector';
@@ -29,9 +29,6 @@ const EntryList = () => {
           <EntryListItem key={index} entry={entry} />
         ))}
       </ScrollView>
-      <View style={styles.murmel}>
-        <MurmelFromBelow />
-      </View>
     </View>
   );
 };
@@ -40,18 +37,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  murmel: {
-    marginBottom: -65,
-  },
   itemContainer: {
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    zIndex: 999,
   },
   dataContainer: {
-    flex: 1,
     display: 'flex',
     flexDirection: 'column',
   },
@@ -59,7 +53,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   deleteContainer: {
-    flex: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
