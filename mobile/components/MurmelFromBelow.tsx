@@ -4,53 +4,41 @@ import { SvgXml } from 'react-native-svg';
 
 import murmelFromBelowXml from '../assets/murmelFromBelow';
 import grabbingMurmelXml from '../assets/grabbingMurmel';
+import { useAppContext } from '../context/AppContext';
 
 const MurmelFromBelow = () => {
-  const [currentSvg, setCurrentSvg] = useState(murmelFromBelowXml);
+  const { isRefreshing } = useAppContext();
   const bounceAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isRefreshing) {
+      startBounce();
+    } else {
+      bounceAnim.setValue(0);
+    }
+  }, [isRefreshing]);
 
   const startBounce = () => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(bounceAnim, {
           toValue: -10,
-          duration: 200,
+          duration: 100,
           useNativeDriver: true,
         }),
         Animated.timing(bounceAnim, {
           toValue: 0,
-          duration: 200,
+          duration: 500,
           useNativeDriver: true,
         }),
       ])
     ).start();
   };
 
-  useEffect(() => {
-    let intervalId: any;
-
-    intervalId = setInterval(() => {
-      setCurrentSvg(prevSvg => {
-        if (prevSvg === murmelFromBelowXml) {
-          startBounce();
-          return grabbingMurmelXml;
-        } else {
-          bounceAnim.setValue(0);
-          return murmelFromBelowXml;
-        }
-      });
-    }, 10000);
-
-    return () => {
-      clearInterval(intervalId);
-      bounceAnim.stopAnimation();
-    };
-  }, []);
-
   return (
     <View style={styles.container}>
       <Animated.View style={{ transform: [{ translateY: bounceAnim }] }}>
-        <SvgXml xml={currentSvg} width="150" height="150"/>
+        {isRefreshing ? <SvgXml xml={grabbingMurmelXml} width="150" height="150"/> : <SvgXml xml={murmelFromBelowXml} width="150" height="150"/>}
       </Animated.View>
     </View>
   );

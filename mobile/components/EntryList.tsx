@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, RefreshControl } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { ScrollView, View, StyleSheet, RefreshControl } from 'react-native';
 
 import ViewPeriodSelector from './ViewPeriodSelector';
 import Summary from './Summary';
 import EntryListItem from './EntryListItem';
-import MurmelFromBelow from './MurmelFromBelow';
 
 import { useAppContext } from '../context/AppContext';
 
 const EntryList = () => {
-  const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
-  const { entries, viewPeriod, fetchEntries, handleDeleteEntry } = useAppContext();
+  const { entries, viewPeriod, fetchEntries } = useAppContext();
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);

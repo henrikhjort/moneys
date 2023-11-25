@@ -17,6 +17,8 @@ interface UserContextProps {
   cumulativeAmount: number;
   fetchEntries: (viewPeriod: ViewPeriod) => void;
   handleDeleteEntry: (id: string) => Promise<void>;
+  isRefreshing: boolean;
+  setIsRefreshing: (isRefreshing: boolean) => void;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -30,10 +32,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.INPUT);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>(ViewPeriod.Today);
   const [cumulativeAmount, setCumulativeAmount] = useState<number>(0);
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   const fetchEntries = async (viewPeriod: ViewPeriod) => {
+    setIsRefreshing(true);
     const entries = await getEntries(viewPeriod);
     setEntries(entries);
+    setIsRefreshing(false);
   }
 
   const handleDeleteEntry = async (id: string) => {
@@ -73,6 +78,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       cumulativeAmount,
       fetchEntries,
       handleDeleteEntry,
+      isRefreshing,
+      setIsRefreshing,
     }}>
       {children}
     </AppContext.Provider>

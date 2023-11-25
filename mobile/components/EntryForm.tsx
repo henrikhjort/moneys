@@ -63,7 +63,7 @@ const EntryForm = () => {
     if (isMurmelHappy) {
       const timeout = setTimeout(() => {
         setIsMurmelHappy(false);
-      }, 2000);
+      }, 1000);
     }
   }, [isMurmelHappy]);
 
