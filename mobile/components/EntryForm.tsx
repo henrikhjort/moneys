@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 
 import type Category from '../types/Category';
 
-import murmelXml from '../assets/murmel';
-import murmelHappyXml from '../assets/murmel2';
+import murmelLegsXml from '../assets/murmelLegs';
+import Murmel from './Murmel';
 import Button from './Button';
 import NumberInput from './NumberInput';
 import CategoryPicker from './CategoryPicker';
@@ -24,9 +24,11 @@ const EntryForm = () => {
   const { entries, setEntries } = useAppContext();
   const [amount, setAmount] = useState<number | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
+  const [isMurmelAngry, setIsMurmelAngry] = useState(false);
+  const [isMurmelHappy, setIsMurmelHappy] = useState(false);
 
-  const amountInputAnim = new Animated.Value(0);
-  const categoryInputAnim = new Animated.Value(0);
+  const amountInputAnim = useRef(new Animated.Value(0)).current;
+  const categoryInputAnim = useRef(new Animated.Value(0)).current;
 
   const shakeAnimation = (animatedValue: Animated.Value) => {
     Animated.sequence([
@@ -37,6 +39,21 @@ const EntryForm = () => {
     ]).start();
   };
 
+  useEffect(() => {
+    if (isMurmelAngry) {
+      const timeout = setTimeout(() => {
+        setIsMurmelAngry(false);
+      }, 2000);
+    }
+  }, [isMurmelAngry]);
+
+  useEffect(() => {
+    if (isMurmelHappy) {
+      const timeout = setTimeout(() => {
+        setIsMurmelHappy(false);
+      }, 2000);
+    }
+  }, [isMurmelHappy]);
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
@@ -47,6 +64,7 @@ const EntryForm = () => {
       shakeAnimation(categoryInputAnim);
     }
     if (!amount || !category) {
+      setIsMurmelAngry(true);
       return;
     }
     const data = {
@@ -68,6 +86,7 @@ const EntryForm = () => {
       const newEntries = [...entries, entry];
       const sorted = sortEntriesByDate(newEntries);
       setEntries(sorted);
+      setIsMurmelHappy(true);
       setButtonStyle(styles.success);
       setTimeout(() => setButtonStyle({}), 1000);
     } catch (error) {
@@ -82,7 +101,7 @@ const EntryForm = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <SvgXml xml={murmelXml} width="50%" height="50%"/>
+        <Murmel angry={isMurmelAngry} happy={isMurmelHappy} />
         <Animated.View style={[{ transform: [{ translateX: amountInputAnim }] }, styles.animatedContainer]}>
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
@@ -90,6 +109,9 @@ const EntryForm = () => {
           <CategoryPicker label={t('category')} selectedValue={category} onValueChange={setCategory} disabled={isLoading} />
         </Animated.View>
         <Button title={t('submit')} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />
+        <View style={styles.murmelLegs}>
+          <SvgXml xml={murmelLegsXml} width="150" height="150"/>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -101,6 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 400,
+    marginTop: 20,
   },
   animatedContainer: {
     width: '100%',
@@ -113,6 +136,11 @@ const styles = StyleSheet.create({
   error: {
     backgroundColor: '#D32F2F',
   },
+  murmelLegs: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default EntryForm;

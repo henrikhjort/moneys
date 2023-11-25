@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import ViewPeriodSelector from './ViewPeriodSelector';
 import Summary from './Summary';
 import EntryListItem from './EntryListItem';
+import MurmelFromBelow from './MurmelFromBelow';
 
-import { formatToHelsinkiTime, getEmojiForCategory } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 
 const EntryList = () => {
@@ -29,6 +29,9 @@ const EntryList = () => {
           <EntryListItem key={index} entry={entry} />
         ))}
       </ScrollView>
+      <View style={styles.murmel}>
+        <MurmelFromBelow />
+      </View>
     </View>
   );
 };
@@ -36,6 +39,9 @@ const EntryList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  murmel: {
+    marginBottom: -65,
   },
   itemContainer: {
     display: 'flex',
