@@ -1,0 +1,23 @@
+export default {
+  input: 'Syötä',
+  list: 'Tarkastele',
+  amount: 'Summa',
+  category: 'Kategoria',
+  submit: 'Tallenna',
+  amountPlaceholder: 'Syötä summa',
+  categoryPlaceholder: 'Valitse kategoria',
+  CAR: 'Auto',
+  FOOD: 'Ruoka',
+  DRINK: 'Juoma',
+  ALCOHOL: 'Alkoholi',
+  GAMES: 'Pelit',
+  ELECTRONICS: 'Elektroniikka',
+  NICOTINE: 'Nikotiini',
+  TRAVEL: 'Matkustus',
+  OTHER: 'Muu',
+  date: 'Päivämäärä',
+  today: 'Tänään',
+  this_week: 'Tällä viikolla',
+  this_month: 'Tässä kuussa',
+  money_spent: 'Rahaa käytetty'
+}

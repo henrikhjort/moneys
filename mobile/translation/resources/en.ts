@@ -1,0 +1,23 @@
+export default {
+  input: 'Input',
+  list: 'View',
+  amount: 'Amount',
+  category: 'Category',
+  submit: 'Submit',
+  amountPlaceholder: 'Enter amount',
+  categoryPlaceholder: 'Select category',
+  CAR: 'Car',
+  FOOD: 'Food',
+  DRINK: 'Drink',
+  ALCOHOL: 'Alcohol',
+  GAMES: 'Games',
+  ELECTRONICS: 'Electronics',
+  NICOTINE: 'Nicotine',
+  TRAVEL: 'Travel',
+  OTHER: 'Other',
+  date: 'Date',
+  today: 'Today',
+  this_week: 'This week',
+  this_month: 'This month',
+  money_spent: 'Money spent'
+}
