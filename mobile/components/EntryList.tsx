@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import ViewPeriodSelector from './ViewPeriodSelector';
 import Summary from './Summary';
+import EntryListItem from './EntryListItem';
 
 import { formatToHelsinkiTime, getEmojiForCategory } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
@@ -11,7 +12,7 @@ import { useAppContext } from '../context/AppContext';
 const EntryList = () => {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
-  const { entries, viewPeriod, fetchEntries, handleDeleteEntry, isLoading } = useAppContext();
+  const { entries, viewPeriod, fetchEntries, handleDeleteEntry } = useAppContext();
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -20,23 +21,12 @@ const EntryList = () => {
   }, [viewPeriod, fetchEntries]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <ViewPeriodSelector />
       <Summary />
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {entries.map((entry, index) => (
-          <View key={`entry-${index}`} style={styles.itemContainer}>
-            <View style={styles.dataContainer}>
-              <Text style={styles.dataText}>{formatToHelsinkiTime(entry.createdAt)}</Text>
-              <Text style={styles.dataText}>{entry.amount} €</Text>
-              <Text style={styles.dataText}>{t(entry.category)} {getEmojiForCategory(entry.category)}</Text>
-            </View>
-            <View style={styles.deleteContainer}>
-              <TouchableOpacity onPress={() => handleDeleteEntry(entry.id || '')} style={styles.deleteButton}>
-                {isLoading ? <ActivityIndicator size="small" color="#C7C7CD" /> : <Text>❌</Text>}
-              </TouchableOpacity>
-            </View>
-          </View>
+          <EntryListItem key={index} entry={entry} />
         ))}
       </ScrollView>
     </View>
@@ -44,6 +34,9 @@ const EntryList = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   itemContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -68,6 +61,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     paddingVertical: 10,
+    paddingRight: 20,
   },
 });
 

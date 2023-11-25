@@ -1,14 +1,15 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable, StyleProp } from 'react-native';
+import { Text, StyleSheet, Pressable, StyleProp, ActivityIndicator } from 'react-native';
 
 type ButtonProps = {
   onPress: () => void;
   title: string;
   disabled?: boolean;
   style?: StyleProp<any>;
+  isLoading?: boolean;
 };
 
-const Button = ({ onPress, title, disabled = false, style }: ButtonProps) => {
+const Button = ({ onPress, title, disabled = false, style, isLoading }: ButtonProps) => {
   return (
     <Pressable
       disabled={disabled}
@@ -20,7 +21,7 @@ const Button = ({ onPress, title, disabled = false, style }: ButtonProps) => {
       ]}
       onPress={onPress}
     >
-      <Text style={styles.text}>{title}</Text>
+      <Text style={styles.text}>{isLoading ? <ActivityIndicator size="small" color="#C7C7CD" /> : `${title}`}</Text>
     </Pressable>
   );
 };

@@ -6,9 +6,10 @@ type NumberInputProps = {
   label?: string;
   amount: number | null;
   setAmount: (amount: number | null) => void;
+  disabled?: boolean;
 }
 
-const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount }) => {
+const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, disabled }) => {
   const { t } = useTranslation();
   const handleChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, ''); // Ensures only numbers are entered
@@ -26,7 +27,8 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount }) =
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
-        style={styles.input}
+        editable={!disabled}
+        style={[styles.input, disabled && styles.inputDisabled]}
         keyboardType="numeric"
         value={valueToString(amount)}
         onChangeText={handleChange}
@@ -50,6 +52,9 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
+  },
+  inputDisabled: {
+    color: '#C7C7CD',
   },
 });
 
