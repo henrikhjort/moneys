@@ -109,7 +109,7 @@ const EntryForm = () => {
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
         <View style={styles.handsContainer}>
-          {!isModalOpen && <SvgXml xml={murmelHandsXml} width="200" height="150" />}
+          {!isModalOpen && <SvgXml xml={murmelHandsXml} width="200" height="100" />}
         </View>
         <Animated.View style={[{ transform: [{ translateX: categoryInputAnim }] }, styles.animatedContainer]}>
           <CategoryPicker 
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 1,
   },
   success: {
     backgroundColor: '#2f7332',
