@@ -11,6 +11,7 @@ import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMont
 dotenv.config();
 
 const mongoString = process.env.MONGO_CONNECTION_STRING || '';
+const API_KEY = process.env.API_KEY;
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
@@ -31,6 +32,19 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.post('/api/entries', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
   const entry: Entry = req.body;
 
   // Validate data.
@@ -49,7 +63,50 @@ app.post('/api/entries', async (req: Request, res: Response) => {
   }
 });
 
+app.delete('/api/entries/:id', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const entryId = req.params.id;
+
+  try {
+    const deletedEntry = await EntryModel.findByIdAndDelete(entryId);
+    if (!deletedEntry) {
+      res.status(404).json({ message: 'Entry not found' });
+    } else {
+      res.status(200).json({ message: 'Entry deleted', entry: deletedEntry });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting entry', error: error });
+  }
+});
+
+
 app.get('/api/entries/today', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
   try {
     const startStr = getStartOfTodayUTC();
     const endStr = getEndOfTodayUTC();

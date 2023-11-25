@@ -26,7 +26,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   }
 
   const categoryOptions = Object.values(Category).map(key => ({
-    label: `${translateCategory(key)} ${getEmojiForCategory(key)}`,
+    label: `${translateCategory(key)}`,
     value: key
   }));
 

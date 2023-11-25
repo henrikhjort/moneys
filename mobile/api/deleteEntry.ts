@@ -1,16 +1,14 @@
 import config from "../config";
-import type { Entry } from '../types/Entry';
 
-const createEntry = async (data: Entry) => {
+const deleteEntry = async (id: string) => {
   try {
     const { API_URL, API_KEY } = config;
-    const response = await fetch(`${API_URL}/api/entries`, {
-      method: 'POST',
+    const response = await fetch(`${API_URL}/api/entries/${id}`, {
+      method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
@@ -25,4 +23,4 @@ const createEntry = async (data: Entry) => {
   }
 }
 
-export default createEntry;
+export default deleteEntry;

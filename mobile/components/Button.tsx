@@ -1,13 +1,14 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, StyleProp } from 'react-native';
 
 type ButtonProps = {
   onPress: () => void;
   title: string;
   disabled?: boolean;
+  style?: StyleProp<any>;
 };
 
-const Button = ({ onPress, title, disabled = false }: ButtonProps) => {
+const Button = ({ onPress, title, disabled = false, style }: ButtonProps) => {
   return (
     <Pressable
       disabled={disabled}
@@ -15,6 +16,7 @@ const Button = ({ onPress, title, disabled = false }: ButtonProps) => {
         styles.button,
         pressed && styles.pressed,
         disabled && styles.disabled,
+        style,
       ]}
       onPress={onPress}
     >

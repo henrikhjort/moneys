@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View, StyleSheet, RefreshControl } from 'react-native';
+import { ScrollView, Text, View, StyleSheet, RefreshControl, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import ViewPeriodSelector from './ViewPeriodSelector';
@@ -11,7 +11,7 @@ import { useAppContext } from '../context/AppContext';
 const EntryList = () => {
   const { t } = useTranslation();
   const [refreshing, setRefreshing] = useState(false);
-  const { entries, viewPeriod, fetchEntries } = useAppContext();
+  const { entries, viewPeriod, fetchEntries, handleDeleteEntry } = useAppContext();
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -28,8 +28,11 @@ const EntryList = () => {
         {entries.map((entry, index) => (
           <View key={`entry-${index}`} style={styles.itemContainer}>
             <Text>{t('date')}: {formatToHelsinkiTime(entry.createdAt)}</Text>
-            <Text>{t('amount')}: {entry.amount}</Text>
+            <Text>{t('amount')}: {entry.amount} €</Text>
             <Text>{t('category')}: {t(entry.category)} {getEmojiForCategory(entry.category)}</Text>
+            <TouchableOpacity onPress={() => handleDeleteEntry(entry.id || '')} style={styles.deleteButton}>
+              <Text>❌</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
@@ -46,7 +49,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
-  // Additional styles...
+  deleteButton: {
+    padding: 10,
+  },
 });
 
 export default EntryList;

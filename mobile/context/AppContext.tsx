@@ -5,6 +5,7 @@ import { Entry } from '../types/Entry';
 import ViewPeriod from '../types/ViewPeriod';
 
 import getEntries from '../api/getEntries';
+import deleteEntry from '../api/deleteEntry';
 
 interface UserContextProps {
   entries: Entry[];
@@ -15,6 +16,7 @@ interface UserContextProps {
   setViewPeriod: (viewPeriod: ViewPeriod) => void;
   cumulativeAmount: number;
   fetchEntries: (viewPeriod: ViewPeriod) => void;
+  handleDeleteEntry: (id: string) => void;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -32,6 +34,16 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const fetchEntries = async (viewPeriod: ViewPeriod) => {
     const entries = await getEntries(viewPeriod);
     setEntries(entries);
+  }
+
+  const handleDeleteEntry = async (id: string) => {
+    try {
+      await deleteEntry(id);
+      const newEntries = entries.filter((entry) => entry.id !== id);
+      setEntries(newEntries);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   useEffect(() => {
@@ -59,7 +71,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       viewPeriod,
       setViewPeriod,
       cumulativeAmount,
-      fetchEntries
+      fetchEntries,
+      handleDeleteEntry
     }}>
       {children}
     </AppContext.Provider>

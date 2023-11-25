@@ -2,7 +2,6 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { formatToHelsinkiTime, getEmojiForCategory } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 
 const Summary = () => {
@@ -22,6 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 30,
+    flexWrap: 'wrap',
   },
   text: {
     fontSize: 20,
