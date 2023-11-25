@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { SvgXml } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
+
+import murmelHandsXml from '../assets/murmelHands';
+import murmelHandsLeftXml from '../assets/murmelHandsLeft';
+import murmelHandsRightXml from '../assets/murmelHandsRight';
 
 import Category from '../types/Category';
 
@@ -12,11 +17,36 @@ type CategoryPickerProps = {
   selectedValue: Category | null;
   onValueChange: (value: Category | null) => void;
   disabled?: boolean;
+  setIsModalOpen: (value: boolean) => void;
 }
 
-const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled }) => {
+enum Hands {
+  LEFT = 'left',
+  RIGHT = 'right',
+};
+
+const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
   const { t } = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [hands, setHands] = useState<Hands>(Hands.LEFT);
+
+  useEffect(() => {
+    let intervalId: any;
+
+    if (modalVisible) {
+      intervalId = setInterval(() => {
+        setHands(prevHands => {
+          if (prevHands === Hands.LEFT) return Hands.RIGHT;
+          if (prevHands === Hands.RIGHT) return Hands.LEFT;
+          return Hands.LEFT;
+        });
+      }, 250);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [modalVisible]);
 
   const translateCategory = (category: Category | null) => {
     if (!category) {
@@ -31,7 +61,23 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
     value: key
   }));
 
+  const closeModal = () => {
+    setModalVisible(false);
+    setIsModalOpen(false);
+  }
+
   const isPlaceholder = selectedValue === null;
+
+  const renderHands = () => {
+    switch (hands) {
+      case Hands.LEFT:
+        return <SvgXml xml={murmelHandsLeftXml} width="200" height="150" />;
+      case Hands.RIGHT:
+        return <SvgXml xml={murmelHandsRightXml} width="200" height="150" />;
+      default:
+        return <SvgXml xml={murmelHandsXml} width="200" height="150" />;
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -39,6 +85,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       <TouchableOpacity style={styles.touchable} onPress={() => {
         Keyboard.dismiss();
         setModalVisible(true);
+        setIsModalOpen(true);
       }}>
         <Text 
           style={[
@@ -53,13 +100,16 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
         visible={modalVisible}
         transparent
         animationType="none"
-        onRequestClose={() => setModalVisible(false)}
+        onRequestClose={() => closeModal()}
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
+          <View style={styles.hands}>
+            {renderHands()}
+          </View>
             <TouchableOpacity
               style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
+              onPress={() => closeModal()}
             >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
@@ -68,7 +118,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
               selectedValue={selectedValue}
               onValueChange={(itemValue, itemIndex) => {
                 onValueChange(itemValue as Category);
-                setModalVisible(false);
+                closeModal();
               }}
               style={styles.picker}
             >
@@ -112,6 +162,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 200,
     backgroundColor: 'white',
+    marginTop: -50,
   },
   placeholderText: {
     fontSize: 16,
@@ -128,20 +179,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: '80%',
-    backgroundColor: 'white',
     borderRadius: 10,
     overflow: 'hidden',
+    marginTop: 100,
+  },
+  hands: {
+    
   },
   closeButton: {
     position: 'absolute',
     top: 10,
     right: 10,
     padding: 10,
-    zIndex: 1, // Ensure it's above other elements
+    zIndex: 1,
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#333', // Or any color that suits your design
+    color: '#333',
     fontWeight: 'bold',
   },
   inputDisabled: {

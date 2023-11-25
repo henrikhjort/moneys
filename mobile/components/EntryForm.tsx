@@ -6,6 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import type Category from '../types/Category';
 
 import murmelLegsXml from '../assets/murmelLegs';
+import murmelHandsXml from '../assets/murmelHands';
 import Murmel from './Murmel';
 import Button from './Button';
 import NumberInput from './NumberInput';
@@ -26,6 +27,8 @@ const EntryForm = () => {
   const [category, setCategory] = useState<Category | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
   const [isMurmelHappy, setIsMurmelHappy] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  console.log('modal', isModalOpen);
 
   const amountInputAnim = useRef(new Animated.Value(0)).current;
   const categoryInputAnim = useRef(new Animated.Value(0)).current;
@@ -105,8 +108,17 @@ const EntryForm = () => {
         <Animated.View style={[{ transform: [{ translateX: amountInputAnim }] }, styles.animatedContainer]}>
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
+        <View style={styles.handsContainer}>
+          {!isModalOpen && <SvgXml xml={murmelHandsXml} width="200" height="150" />}
+        </View>
         <Animated.View style={[{ transform: [{ translateX: categoryInputAnim }] }, styles.animatedContainer]}>
-          <CategoryPicker label={t('category')} selectedValue={category} onValueChange={setCategory} disabled={isLoading} />
+          <CategoryPicker 
+            label={t('category')}
+            selectedValue={category}
+            onValueChange={setCategory}
+            disabled={isLoading}
+            setIsModalOpen={setIsModalOpen}
+          />
         </Animated.View>
         <Button title={t('submit')} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />
         <View style={styles.murmelLegs}>
@@ -140,7 +152,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  handsContainer: {
+    position: 'absolute',
+    paddingBottom: 20,
+  },
 });
 
 export default EntryForm;
