@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   murmel: {
-    flex: 0.20,
+    flex: 0.22,
     marginBottom: -25,
   },
 });

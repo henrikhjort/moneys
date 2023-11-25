@@ -27,8 +27,8 @@ const EntryForm = () => {
   const [category, setCategory] = useState<Category | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
   const [isMurmelHappy, setIsMurmelHappy] = useState(false);
+  const [isMurmelGreedy, setIsMurmelGreedy] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log('modal', isModalOpen);
 
   const amountInputAnim = useRef(new Animated.Value(0)).current;
   const categoryInputAnim = useRef(new Animated.Value(0)).current;
@@ -41,6 +41,15 @@ const EntryForm = () => {
       Animated.timing(animatedValue, { toValue: 0, duration: 50, useNativeDriver: true })
     ]).start();
   };
+
+  useEffect(() => {
+    if (amount) {
+      setIsMurmelGreedy(true);
+      const timeout = setTimeout(() => {
+        setIsMurmelGreedy(false);
+      }, 300);
+    }
+  }, [amount]);
 
   useEffect(() => {
     if (isMurmelAngry) {
@@ -104,7 +113,7 @@ const EntryForm = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
-        <Murmel angry={isMurmelAngry} happy={isMurmelHappy} />
+        <Murmel angry={isMurmelAngry} happy={isMurmelHappy} greedy={isMurmelGreedy} />
         <Animated.View style={[{ transform: [{ translateX: amountInputAnim }] }, styles.animatedContainer]}>
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
