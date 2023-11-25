@@ -11,7 +11,6 @@ import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMont
 dotenv.config();
 
 const mongoString = process.env.MONGO_CONNECTION_STRING || '';
-const API_KEY = process.env.API_KEY;
 
 mongoose.connect(mongoString);
 const database = mongoose.connection;
@@ -163,7 +162,8 @@ app.get('/api/entries/this_month', async (req: Request, res: Response) => {
   }
 });
 
+const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
-app.listen(8000, '0.0.0.0', () => {
-  console.log(`Server is Fire at http://localhost:8000`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on port ${port}`);
 });
