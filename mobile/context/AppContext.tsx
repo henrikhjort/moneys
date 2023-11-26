@@ -7,6 +7,8 @@ import ViewPeriod from '../types/ViewPeriod';
 import getEntries from '../api/getEntries';
 import deleteEntry from '../api/deleteEntry';
 
+import { generateId, getId, setId } from '../utils/storage';
+
 interface UserContextProps {
   entries: Entry[];
   setEntries: (entries: Entry[]) => void;
@@ -20,6 +22,7 @@ interface UserContextProps {
   isRefreshing: boolean;
   setIsRefreshing: (isRefreshing: boolean) => void;
   eurosSpentToday: number;
+  userId: string;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -29,6 +32,7 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
+  const [userId, setUserId] = useState<string>('');
   const [entries, setEntries] = useState<Entry[]>([]);
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.INPUT);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>(ViewPeriod.Today);
@@ -36,32 +40,46 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [eurosSpentToday, setEurosSpentToday] = useState<number>(0);
 
-useEffect(() => {
-  const today = new Date();
-  const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const endDate = new Date(startDate);
-  endDate.setDate(endDate.getDate() + 1);
+  useEffect(() => {
+    const fetchUserId = async () => {
+      const id = await getId();
+      if (!id) {
+        const newId = generateId();
+        await setId(newId);
+        setUserId(newId);
+      } else {
+        setUserId(id);
+      }
+    }
+    fetchUserId();
+  }, []);
 
-  const entriesToday = entries.filter((entry) => {
-    const entryDate = new Date(entry.createdAt);
-    return entryDate >= startDate && entryDate < endDate;
-  });
+  useEffect(() => {
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 1);
 
-  const eurosSpentToday = entriesToday.reduce((acc, entry) => acc + entry.amount, 0);
-  setEurosSpentToday(eurosSpentToday);
-}, [entries]);
+    const entriesToday = entries.filter((entry) => {
+      const entryDate = new Date(entry.createdAt);
+      return entryDate >= startDate && entryDate < endDate;
+    });
+
+    const eurosSpentToday = entriesToday.reduce((acc, entry) => acc + entry.amount, 0);
+    setEurosSpentToday(eurosSpentToday);
+  }, [entries]);
 
 
   const fetchEntries = async (viewPeriod: ViewPeriod) => {
     setIsRefreshing(true);
-    const entries = await getEntries(viewPeriod);
+    const entries = await getEntries(viewPeriod, userId);
     setEntries(entries);
     setIsRefreshing(false);
   }
 
   const handleDeleteEntry = async (id: string) => {
     try {
-      await deleteEntry(id);
+      await deleteEntry(id, userId);
       const newEntries = entries.filter((entry) => entry.id !== id);
       setEntries(newEntries);
     } catch (error) {
@@ -99,6 +117,7 @@ useEffect(() => {
       isRefreshing,
       setIsRefreshing,
       eurosSpentToday,
+      userId,
     }}>
       {children}
     </AppContext.Provider>

@@ -17,11 +17,16 @@ const database = mongoose.connection;
 
 database.on('error', (error) => {
     console.log(error)
-})
+});
 
 database.once('connected', () => {
     console.log('Database Connected');
-})
+});
+
+const getUserIdFromHeaders = (req: Request): string | null => {
+  return req.headers['x-user-id'] as string || null;
+};
+
 
 const app: Application = express();
 app.use(express.json());
@@ -44,7 +49,14 @@ app.post('/api/entries', async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Unauthorized' });
     return;
   }
-  const entry: Entry = req.body;
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  const entry: Entry = { ...req.body, userId };
 
   // Validate data.
   const isValidEntry = validateEntry(entry);
@@ -77,10 +89,21 @@ app.delete('/api/entries/:id', async (req: Request, res: Response) => {
     return;
   }
 
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
   const entryId = req.params.id;
 
   try {
-    const deletedEntry = await EntryModel.findByIdAndDelete(entryId);
+    const entryToDelete = await EntryModel.findOne({ _id: entryId, userId });
+    if (!entryToDelete) {
+      res.status(404).json({ message: 'Entry not found or does not belong to the user' });
+      return;
+    }
+    const deletedEntry = await EntryModel.findByIdAndDelete(entryToDelete._id);
     if (!deletedEntry) {
       res.status(404).json({ message: 'Entry not found' });
     } else {
@@ -106,11 +129,19 @@ app.get('/api/entries/today', async (req: Request, res: Response) => {
     res.status(401).json({ message: 'Unauthorized' });
     return;
   }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
   try {
     const startStr = getStartOfTodayUTC();
     const endStr = getEndOfTodayUTC();
 
     const entries = await EntryModel.find({
+      userId,
       createdAt: {
         $gte: startStr,
         $lte: endStr
@@ -125,11 +156,32 @@ app.get('/api/entries/today', async (req: Request, res: Response) => {
 });
 
 app.get('/api/entries/this_week', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
   try {
     const startOfWeekStr = getStartOfWeekUTC();
     const nowStr = new Date().toISOString();
 
     const entries = await EntryModel.find({
+      userId,
       createdAt: {
         $gte: startOfWeekStr,
         $lte: nowStr
@@ -144,11 +196,32 @@ app.get('/api/entries/this_week', async (req: Request, res: Response) => {
 });
 
 app.get('/api/entries/this_month', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
   try {
     const startOfMonthStr = getStartOfMonthUTC();
     const nowStr = new Date().toISOString();
 
     const entries = await EntryModel.find({
+      userId,
       createdAt: {
         $gte: startOfMonthStr,
         $lte: nowStr

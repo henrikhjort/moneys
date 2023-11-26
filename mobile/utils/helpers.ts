@@ -73,4 +73,4 @@ export const sortEntriesByDate = (entries: Entry[]) => {
     const dateB = new Date(b.createdAt);
     return dateB.getTime() - dateA.getTime();
   });
-}
+};

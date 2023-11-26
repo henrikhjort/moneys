@@ -5,6 +5,7 @@ const CategoryValues = Object.values(Category) as string[];
 
 // Define the schema for entries
 const entrySchema = new mongoose.Schema({
+  userId: { type: String, required: true },
   createdAt: { type: Date, required: true },
   amount: { type: Number, required: true },
   category: { type: String, enum: CategoryValues, required: true },

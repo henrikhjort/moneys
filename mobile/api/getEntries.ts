@@ -2,13 +2,14 @@ import config from "../config";
 import type { Entry } from "../types/Entry";
 import ViewPeriod from "../types/ViewPeriod";
 
-const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today) => {
+const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: string) => {
   try {
     const { API_URL, API_KEY } = config;
     const response = await fetch(`${API_URL}/api/entries/${viewPeriod}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
+        'X-User-Id': userId,
       },
     });
 

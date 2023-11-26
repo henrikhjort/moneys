@@ -26,7 +26,7 @@ const EntryForm = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
-  const { entries, setEntries, eurosSpentToday } = useAppContext();
+  const { userId, entries, setEntries, eurosSpentToday } = useAppContext();
   const [amount, setAmount] = useState<number | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
@@ -91,7 +91,7 @@ const EntryForm = () => {
     };
     try {
       setIsLoading(true);
-      const createdEntry = await createEntry(data);
+      const createdEntry = await createEntry(data, userId);
       const entry: Entry = {
         id: createdEntry._id,
         createdAt: createdEntry.createdAt,

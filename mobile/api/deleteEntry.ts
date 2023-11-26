@@ -1,6 +1,6 @@
 import config from "../config";
 
-const deleteEntry = async (id: string) => {
+const deleteEntry = async (id: string, userId: string) => {
   try {
     const { API_URL, API_KEY } = config;
     const response = await fetch(`${API_URL}/api/entries/${id}`, {
@@ -8,6 +8,7 @@ const deleteEntry = async (id: string) => {
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
+        'X-User-Id': userId,
       },
     });
 

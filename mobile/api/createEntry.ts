@@ -1,7 +1,7 @@
 import config from "../config";
 import type { Entry } from '../types/Entry';
 
-const createEntry = async (data: Entry) => {
+const createEntry = async (data: Entry, userId: string) => {
   try {
     const { API_URL, API_KEY } = config;
     const response = await fetch(`${API_URL}/api/entries`, {
@@ -9,6 +9,7 @@ const createEntry = async (data: Entry) => {
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
+        'X-User-Id': userId,
       },
       body: JSON.stringify(data),
     });
