@@ -6,6 +6,10 @@ import { SvgXml } from 'react-native-svg';
 import type Category from '../types/Category';
 
 import murmelLegsXml from '../assets/murmelLegs';
+import murmelLegsFat1Xml from '../assets/murmelLegsFat1';
+import murmelLegsFat2Xml from '../assets/murmelLegsFat2';
+import murmelLegsFat3Xml from '../assets/murmelLegsFat3';
+import murmelLegsFat4Xml from '../assets/murmelLegsFat4';
 import murmelHandsXml from '../assets/murmelHands';
 import Murmel from './Murmel';
 import Button from './Button';
@@ -22,7 +26,7 @@ const EntryForm = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
-  const { entries, setEntries } = useAppContext();
+  const { entries, setEntries, eurosSpentToday } = useAppContext();
   const [amount, setAmount] = useState<number | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
@@ -110,6 +114,22 @@ const EntryForm = () => {
     }
   };
 
+  const renderLegs = () => {
+    if (eurosSpentToday < 20) {
+      return <SvgXml xml={murmelLegsXml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 50) {
+      return <SvgXml xml={murmelLegsFat1Xml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 100) {
+      return <SvgXml xml={murmelLegsFat2Xml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 150) {
+      return <SvgXml xml={murmelLegsFat3Xml} width="150" height="400"/>
+    }
+    return <SvgXml xml={murmelLegsFat4Xml} width="150" height="400"/>
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
@@ -131,7 +151,7 @@ const EntryForm = () => {
         </Animated.View>
         <Button title={t('submit')} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />
         <View style={styles.murmelLegs}>
-          <SvgXml xml={murmelLegsXml} width="150" height="150"/>
+          {renderLegs()}
         </View>
       </View>
     </TouchableWithoutFeedback>
