@@ -28,7 +28,6 @@ const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: s
 
     return entries;
   } catch (error) {
-    console.error('Error fetching data:', error);
     return [];
   }
 }

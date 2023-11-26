@@ -19,7 +19,6 @@ const deleteEntry = async (id: string, userId: string) => {
     const resData = await response.json();
     return resData;
   } catch (error) {
-    console.error('Error fetching data:', error);
     return null;
   }
 }

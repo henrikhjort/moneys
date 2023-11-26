@@ -94,7 +94,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       setEntries(newEntries);
       setEntryDeleted(true);
     } catch (error) {
-      console.log(error);
+      // Do nothing.
     }
   }
 
