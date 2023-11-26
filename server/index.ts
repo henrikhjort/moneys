@@ -6,6 +6,7 @@ import type { Entry } from './types/Entry';
 import EntryModel from './db/models/Entry';
 
 import validateEntry from './utils/validateEntry';
+import { getDefaultCategories } from './utils/categories';
 import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMonthUTC } from './utils/time';
 
 dotenv.config();
@@ -229,6 +230,37 @@ app.get('/api/entries/this_month', async (req: Request, res: Response) => {
     }).sort({ createdAt: -1 });
 
     res.status(200).json(entries);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving data', error: error });
+  }
+});
+
+app.get('/api/categories', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  try {
+    // Get default categories and user specified custom categories.
+    const defaultCategories = getDefaultCategories();
+    res.status(200).json(defaultCategories);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error retrieving data', error: error });

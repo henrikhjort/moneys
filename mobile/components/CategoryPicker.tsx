@@ -8,15 +8,13 @@ import murmelHandsXml from '../assets/murmelHands';
 import murmelHandsLeftXml from '../assets/murmelHandsLeft';
 import murmelHandsRightXml from '../assets/murmelHandsRight';
 
-import Category from '../types/Category';
-
+import getCategories from '../api/getCategories';
 import { useAppContext } from '../context/AppContext';
-import { getEmojiForCategory } from '../utils/helpers';
 
 type CategoryPickerProps = {
   label?: string;
-  selectedValue: Category | null;
-  onValueChange: (value: Category | null) => void;
+  selectedValue: string | null;
+  onValueChange: (value: string | null) => void;
   disabled?: boolean;
   setIsModalOpen: (value: boolean) => void;
 }
@@ -28,9 +26,19 @@ enum Hands {
 
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
   const { t } = useTranslation();
-  const { setIsBrowsingCategories } = useAppContext();
+  const { setIsBrowsingCategories, userId } = useAppContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [hands, setHands] = useState<Hands>(Hands.LEFT);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await getCategories(userId);
+      setCategories(categories);
+    }
+
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     let intervalId: any;
@@ -50,17 +58,9 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
     };
   }, [modalVisible]);
 
-  const translateCategory = (category: Category | null) => {
-    if (!category) {
-      return t('categoryPlaceholder');
-    } else {
-      return `${t(category)} ${getEmojiForCategory(category)}`;
-    }
-  }
-
-  const categoryOptions = Object.values(Category).map(key => ({
-    label: `${translateCategory(key)}`,
-    value: key
+  const categoryOptions = categories.map(category => ({
+    label: category,
+    value: category,
   }));
 
   const closeModal = () => {
@@ -82,6 +82,13 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
     }
   }
 
+  const translateCategory = (category: string | null) => {
+    if (!category) return null;
+    const translation = t(category);
+    if (!translation) return category;
+    return translation;
+  };
+
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -97,7 +104,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
             disabled && styles.inputDisabled
           ]}
         >
-          {`${translateCategory(selectedValue)}`}
+          {isPlaceholder ? t('categoryPlaceholder') : translateCategory(selectedValue)}
         </Text>
       </TouchableOpacity>
       <Modal
@@ -121,13 +128,13 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
               enabled={!disabled}
               selectedValue={selectedValue}
               onValueChange={(itemValue, itemIndex) => {
-                onValueChange(itemValue as Category);
+                onValueChange(itemValue);
                 closeModal();
               }}
               style={styles.picker}
             >
               {categoryOptions.map((option, index) => (
-                <Picker.Item key={index} label={option.label} value={option.value} />
+                <Picker.Item key={index} label={translateCategory(option.label) || ''} value={option.value} />
               ))}
             </Picker>
           </View>

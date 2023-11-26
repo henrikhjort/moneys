@@ -3,8 +3,6 @@ import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Image }
 import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 
-import type Category from '../types/Category';
-
 import murmelLegsXml from '../assets/murmelLegs';
 import murmelLegsFat1Xml from '../assets/murmelLegsFat1';
 import murmelLegsFat2Xml from '../assets/murmelLegsFat2';
@@ -28,7 +26,7 @@ const EntryForm = () => {
   const [buttonStyle, setButtonStyle] = useState({});
   const { userId, entries, setEntries, eurosSpentToday } = useAppContext();
   const [amount, setAmount] = useState<number | null>(null);
-  const [category, setCategory] = useState<Category | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
   const [isMurmelHappy, setIsMurmelHappy] = useState(false);
   const [isMurmelGreedy, setIsMurmelGreedy] = useState(false);

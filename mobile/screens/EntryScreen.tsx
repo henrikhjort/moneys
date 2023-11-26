@@ -6,10 +6,11 @@ import { useTranslation } from 'react-i18next';
 import pawPrintXml from '../assets/pawPrint';
 import EntryForm from '../components/EntryForm';
 import SettingsModal from '../components/SettingsModal';
+import { useAppContext } from '../context/AppContext';
 
 const EntryScreen = () => {
   const { t } = useTranslation();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
 
   const handleSettingsPress = () => {
     setIsSettingsOpen(true);
@@ -24,7 +25,7 @@ const EntryScreen = () => {
           <SvgXml style={styles.settingsIcon} xml={pawPrintXml} width="15" height="15"/>
         </TouchableOpacity>
       </View>
-      <SettingsModal isVisible={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+      <SettingsModal />
     </View>
   );
 }

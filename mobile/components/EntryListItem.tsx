@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { formatToHelsinkiTime, getEmojiForCategory } from '../utils/helpers';
+import { formatToHelsinkiTime } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 
 import type { Entry } from '../types/Entry';
@@ -27,7 +27,7 @@ const EntryListItem = ({ entry }: EntryListItemProps) => {
       <View style={styles.dataContainer}>
         <Text style={styles.dataText}>{formatToHelsinkiTime(entry.createdAt)}</Text>
         <Text style={styles.dataText}>{entry.amount} €</Text>
-        <Text style={styles.dataText}>{t(entry.category)} {getEmojiForCategory(entry.category)}</Text>
+        <Text style={styles.dataText}>{t(entry.category)}</Text>
       </View>
       <View style={styles.deleteContainer}>
         <TouchableOpacity onPress={() => deleteEntry(entry.id || '')} style={styles.deleteButton}>

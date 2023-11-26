@@ -1,4 +1,3 @@
-import Category from "../types/Category";
 import { Entry } from "../types/Entry";
 
 export const getHelsinkiTimeString = () => {
@@ -41,30 +40,6 @@ export const formatToHelsinkiTime = (isoDateTimeString: string) => {
 
   // Reformat to "dd.mm.yyyy hh:mm"
   return `${dateParts[1]}.${dateParts[2]}.${dateParts[3]} ${dateParts[4]}:${dateParts[5]}`;
-};
-
-export const getEmojiForCategory = (category: Category | null): string => {
-  if (!category) return '';
-  switch (category) {
-    case Category.CAR:
-      return '🚗'; // Emoji for CAR
-    case Category.FOOD:
-      return '🍔'; // Emoji for FOOD
-    case Category.DRINK:
-      return '🍹'; // Emoji for DRINK
-    case Category.ALCOHOL:
-      return '🍷'; // Emoji for ALCOHOL
-    case Category.GAMES:
-      return '🎮'; // Emoji for GAMES
-    case Category.ELECTRONICS:
-      return '💻'; // Emoji for ELECTRONICS
-    case Category.NICOTINE:
-      return '🚬'; // Emoji for NICOTINE
-    case Category.TRAVEL:
-      return '✈️'; // Emoji for TRAVEL
-    default:
-      return '❓'; // Default emoji if no match is found
-  }
 };
 
 export const sortEntriesByDate = (entries: Entry[]) => {

@@ -1,46 +1,43 @@
 import React from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-type SettingsModalProps = {
-  isVisible: boolean;
-  onClose: () => void;
-}
+import { useAppContext } from '../context/AppContext';
 
-const SettingsModal = ({ isVisible, onClose }: SettingsModalProps) => {
+const SettingsModal = () => {
+  const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
+
+  const handleClose = () => {
+    setIsSettingsOpen(false);
+  };
+
   return (
     <Modal
-      animationType="slide"
+      animationType="none"
       transparent={true}
-      visible={isVisible}
-      onRequestClose={onClose}>
-      <View style={styles.centeredView}>
+      visible={isSettingsOpen}
+      onRequestClose={handleClose}>
+      <TouchableOpacity style={styles.overlay} onPress={handleClose} activeOpacity={1}>
         <View style={styles.modalView}>
-          <Text style={styles.modalText}>Settings</Text>
-          <TouchableOpacity
-            style={[styles.button, styles.buttonClose]}
-            onPress={onClose}>
-            <Text style={styles.textStyle}>Close</Text>
-          </TouchableOpacity>
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  centeredView: {
+  overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalView: {
-    margin: 20,
+    width: '80%',
+    height: '60%',
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 4,
     padding: 35,
     alignItems: 'center',
-    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -48,14 +45,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: '#2196F3',
   },
   textStyle: {
     color: 'white',
