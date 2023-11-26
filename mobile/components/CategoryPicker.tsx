@@ -10,6 +10,7 @@ import murmelHandsRightXml from '../assets/murmelHandsRight';
 
 import Category from '../types/Category';
 
+import { useAppContext } from '../context/AppContext';
 import { getEmojiForCategory } from '../utils/helpers';
 
 type CategoryPickerProps = {
@@ -27,6 +28,7 @@ enum Hands {
 
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
   const { t } = useTranslation();
+  const { setIsBrowsingCategories } = useAppContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [hands, setHands] = useState<Hands>(Hands.LEFT);
 
@@ -64,6 +66,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   const closeModal = () => {
     setModalVisible(false);
     setIsModalOpen(false);
+    setIsBrowsingCategories(false);
   }
 
   const isPlaceholder = selectedValue === null;
@@ -85,6 +88,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       <TouchableOpacity style={styles.touchable} onPress={() => {
         Keyboard.dismiss();
         setModalVisible(true);
+        setIsBrowsingCategories(true);
         setIsModalOpen(true);
       }}>
         <Text 

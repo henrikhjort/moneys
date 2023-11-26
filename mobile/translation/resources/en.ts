@@ -21,5 +21,6 @@ export default {
   today: 'Today',
   this_week: 'This week',
   this_month: 'This month',
-  money_spent: 'Money spent'
+  money_spent: 'Money spent',
+  settings: 'Settings',
 }

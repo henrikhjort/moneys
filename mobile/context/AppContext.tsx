@@ -24,6 +24,8 @@ interface UserContextProps {
   eurosSpentToday: number;
   userId: string;
   entryDeleted: boolean;
+  isBrowsingCategories: boolean;
+  setIsBrowsingCategories: (isBrowsingCategories: boolean) => void;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -41,6 +43,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [eurosSpentToday, setEurosSpentToday] = useState<number>(0);
   const [entryDeleted, setEntryDeleted] = useState<boolean>(false);
+  const [isBrowsingCategories, setIsBrowsingCategories] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -130,6 +133,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       eurosSpentToday,
       userId,
       entryDeleted,
+      isBrowsingCategories,
+      setIsBrowsingCategories,
     }}>
       {children}
     </AppContext.Provider>

@@ -21,5 +21,6 @@ export default {
   today: 'Tänään',
   this_week: 'Tällä viikolla',
   this_month: 'Tässä kuussa',
-  money_spent: 'Rahaa käytetty'
+  money_spent: 'Rahaa käytetty',
+  settings: 'Asetukset',
 }

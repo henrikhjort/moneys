@@ -7,6 +7,9 @@ import murmelBlinkXml from '../assets/murmelBlink';
 import murmelAngryXml from '../assets/angryMurmel';
 import happyMurmelXml from '../assets/happyMurmel';
 import moneyEyesXml from '../assets/moneyEyes';
+import murmelMouthOpenXml from '../assets/murmelMouthOpen';
+
+import { useAppContext } from '../context/AppContext';
 
 type MurmelProps = {
   angry: boolean;
@@ -15,6 +18,7 @@ type MurmelProps = {
 };
 
 const Murmel = ({ angry, happy, greedy }: MurmelProps) => {
+  const { isBrowsingCategories } = useAppContext();
   const [isBlinking, setIsBlinking] = useState(false);
 
   useEffect(() => {
@@ -36,6 +40,9 @@ const Murmel = ({ angry, happy, greedy }: MurmelProps) => {
     if (isBlinking) {
       return <SvgXml xml={murmelBlinkXml} width="150" height="150"/>;
     }
+    if (isBrowsingCategories) { // Condition to check if browsing categories
+      return <SvgXml xml={murmelMouthOpenXml} width="150" height="150"/>;
+    }
     if (greedy) {
       return <SvgXml xml={moneyEyesXml} width="150" height="150"/>;
     }
@@ -47,6 +54,7 @@ const Murmel = ({ angry, happy, greedy }: MurmelProps) => {
     }
     return <SvgXml xml={murmelXml} width="150" height="150"/>;
   };
+
 
   return (
     <View style={styles.container}>
