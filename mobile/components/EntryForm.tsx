@@ -33,6 +33,7 @@ const EntryForm = () => {
   const [isMurmelHappy, setIsMurmelHappy] = useState(false);
   const [isMurmelGreedy, setIsMurmelGreedy] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [buttonTitle, setButtonTitle] = useState(t('submit'));
 
   const amountInputAnim = useRef(new Animated.Value(0)).current;
   const categoryInputAnim = useRef(new Animated.Value(0)).current;
@@ -104,10 +105,18 @@ const EntryForm = () => {
       setEntries(sorted);
       setIsMurmelHappy(true);
       setButtonStyle(styles.success);
-      setTimeout(() => setButtonStyle({}), 1000);
+      setButtonTitle(t('submitSuccess'));
+      setTimeout(() => {
+        setButtonStyle({})
+        setButtonTitle(t('submit'));
+      }, 1000);
     } catch (error) {
       setButtonStyle(styles.error);
-      setTimeout(() => setButtonStyle({}), 1000);
+      setButtonTitle(t('submitFail'));
+      setTimeout(() => {
+        setButtonStyle({})
+        setButtonTitle(t('submit'));
+      }, 1000);
     }
     finally {
       setIsLoading(false);
@@ -149,7 +158,7 @@ const EntryForm = () => {
             setIsModalOpen={setIsModalOpen}
           />
         </Animated.View>
-        <Button title={t('submit')} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />
+        <Button title={buttonTitle} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />
         <View style={styles.murmelLegs}>
           {renderLegs()}
         </View>

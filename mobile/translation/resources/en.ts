@@ -4,6 +4,8 @@ export default {
   amount: 'Amount',
   category: 'Category',
   submit: 'Submit',
+  submitSuccess: 'Submit successful',
+  submitFail: 'Submit failed',
   amountPlaceholder: 'Enter amount',
   categoryPlaceholder: 'Select category',
   CAR: 'Car',

@@ -4,6 +4,8 @@ export default {
   amount: 'Summa',
   category: 'Kategoria',
   submit: 'Tallenna',
+  submitSuccess: 'Tallennus onnistui',
+  submitFail: 'Tallennus epäonnistui',
   amountPlaceholder: 'Syötä summa',
   categoryPlaceholder: 'Valitse kategoria',
   CAR: 'Auto',
