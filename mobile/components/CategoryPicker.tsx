@@ -5,13 +5,18 @@ import { SvgXml } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
 import murmelHandsXml from '../assets/murmelHands';
-import murmelHandsLeftXml from '../assets/murmelHandsLeft';
-import murmelHandsRightXml from '../assets/murmelHandsRight';
+import darkModeHandsXml from '../assets/darkMode/darkModeHands';
 
-import getCategories from '../api/getCategories';
+import murmelHandsLeftXml from '../assets/murmelHandsLeft';
+import darkModeHandsLeftXml from '../assets/darkMode/darkModeHandsLeft';
+
+import murmelHandsRightXml from '../assets/murmelHandsRight';
+import darkModeHandsRightXml from '../assets/darkMode/darkModeHandsRight';
+
 import { getDefaultCategories } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 type CategoryPickerProps = {
   label?: string;
@@ -27,6 +32,8 @@ enum Hands {
 };
 
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { setIsBrowsingCategories } = useAppContext();
   const { customCategories } = useUserContext();
@@ -70,7 +77,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
 
   const isPlaceholder = selectedValue === null;
 
-  const renderHands = () => {
+  const renderLightModeHands = () => {
     switch (hands) {
       case Hands.LEFT:
         return <SvgXml xml={murmelHandsLeftXml} width="200" height="150" />;
@@ -78,6 +85,26 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
         return <SvgXml xml={murmelHandsRightXml} width="200" height="150" />;
       default:
         return <SvgXml xml={murmelHandsXml} width="200" height="150" />;
+    }
+  }
+
+  const renderDarkModeHands = () => {
+    switch (hands) {
+      case Hands.LEFT:
+        return <SvgXml xml={darkModeHandsLeftXml} width="200" height="150" />;
+      case Hands.RIGHT:
+        return <SvgXml xml={darkModeHandsRightXml} width="200" height="150" />;
+      default:
+        return <SvgXml xml={darkModeHandsXml} width="200" height="150" />;
+    }
+  }
+
+  const renderHands = () => {
+    if (theme === 'light') {
+      return renderLightModeHands();
+    }
+    else {
+      return renderDarkModeHands();
     }
   }
 
@@ -142,6 +169,79 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
     </View>
   );
 };
+
+const getStyles = (theme: string) => StyleSheet.create({
+  container: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme === 'light' ? '#121212' : 'white',
+  },
+  touchable: {
+    height: 40,
+    borderWidth: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    borderColor: theme === 'light' ? 'black' : 'white',
+  },
+  touchableText: {
+    fontSize: 16,
+    color: theme === 'light' ? '#121212' : 'white',
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 120,
+  },
+  picker: {
+    width: '100%',
+    height: 200,
+    backgroundColor: 'white',
+    marginTop: -50,
+  },
+  placeholderText: {
+    fontSize: 16,
+    color: '#C7C7CD',
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, .3)',
+  },
+  modalContent: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '80%',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginTop: 100,
+  },
+  hands: {
+    
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    padding: 10,
+    zIndex: 1,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  inputDisabled: {
+    color: '#C7C7CD',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {

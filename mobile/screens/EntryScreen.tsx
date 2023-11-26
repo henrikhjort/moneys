@@ -4,17 +4,31 @@ import { SvgXml } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
 import pawPrintXml from '../assets/pawPrint';
+import darkModePawPrintXml from '../assets/darkMode/darkModePawPrint';
+
 import EntryForm from '../components/EntryForm';
 import SettingsModal from '../components/SettingsModal';
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 const EntryScreen = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
-  const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
+  const { setIsSettingsOpen } = useAppContext();
 
   const handleSettingsPress = () => {
     setIsSettingsOpen(true);
   };
+
+  const renderPawPrint = () => {
+    if (theme === 'light') {
+      return <SvgXml style={styles.settingsIcon} xml={pawPrintXml} width="15" height="15"/>;
+    }
+    else {
+      return <SvgXml style={styles.settingsIcon} xml={darkModePawPrintXml} width="15" height="15"/>;
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -22,7 +36,7 @@ const EntryScreen = () => {
       <View style={styles.settings}>
         <TouchableOpacity style={styles.settingsTextRow} onPress={handleSettingsPress}>
           <Text style={styles.settingsText}>{t('settings')}</Text>
-          <SvgXml style={styles.settingsIcon} xml={pawPrintXml} width="15" height="15"/>
+          {renderPawPrint()}
         </TouchableOpacity>
       </View>
       <SettingsModal />
@@ -30,7 +44,7 @@ const EntryScreen = () => {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
@@ -50,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontVariant: ['small-caps'],
     paddingRight: 5,
-    color: 'red',
+    color: theme === 'light' ? '#121212' : 'white',
   },
   settingsIcon: {
     marginTop: 2,

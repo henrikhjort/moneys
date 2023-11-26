@@ -5,8 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { Screen } from '../types/Screen';
 
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 const TabSelector = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { currentScreen, setCurrentScreen } = useAppContext();
   return (
@@ -15,23 +18,32 @@ const TabSelector = () => {
         style={[styles.tab, currentScreen === Screen.INPUT && styles.activeTab]}
         onPress={() => setCurrentScreen(Screen.INPUT)}
       >
-        <Text style={[styles.tabText && currentScreen === Screen.INPUT && styles.activeTabText]}>{t('input')}</Text>
+        <Text style={[
+          styles.tabText, 
+          currentScreen === Screen.INPUT && styles.activeTabText
+          ]}>{t('input')}
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity 
         style={[styles.tab, currentScreen === Screen.VIEW && styles.activeTab]}
         onPress={() => setCurrentScreen(Screen.VIEW)}
       >
-        <Text style={[styles.tabText && currentScreen === Screen.VIEW && styles.activeTabText]}>{t('list')}</Text>
+        <Text style={[
+          styles.tabText, 
+          currentScreen === Screen.VIEW && styles.activeTabText
+          ]}>{t('list')}
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   tabsContainer: {
     display: 'flex',
     flexDirection: 'row',
     marginBottom: 16,
+    backgroundColor: theme === 'light' ? 'white' : '#121212',
   },
   tab: {
     flex: 1,
@@ -41,17 +53,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 4,
+    backgroundColor: theme === 'light' ? 'white' : '#121212',
+    borderColor: theme === 'light' ? 'black' : 'white',
   },
   activeTab: {
-    backgroundColor: 'black',
+    backgroundColor: theme === 'light' ? 'black' : 'white',
   },
   tabText: {
     textAlign: 'center',
+    color: theme === 'light' ? '#121212' : 'white', // Default color for both themes
   },
   activeTabText: {
-    color: 'white',
-  }
+    color: theme === 'light' ? 'white' : '#121212', // Color for active tab text
+  },
 });
-
 
 export default TabSelector;

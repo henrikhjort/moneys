@@ -4,11 +4,23 @@ import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 
 import murmelLegsXml from '../assets/murmelLegs';
+import murmelDarkModeLegsXml from '../assets/darkMode/murmelDarkModeLegs';
+
 import murmelLegsFat1Xml from '../assets/murmelLegsFat1';
+import darkModeLegsFat1Xml from '../assets/darkMode/darkModeLegsFat1';
+
 import murmelLegsFat2Xml from '../assets/murmelLegsFat2';
+import darkModeLegsFat2Xml from '../assets/darkMode/darkModeLegsFat2';
+
 import murmelLegsFat3Xml from '../assets/murmelLegsFat3';
+import darkModeLegsFat3Xml from '../assets/darkMode/darkModeLegsFat3';
+
 import murmelLegsFat4Xml from '../assets/murmelLegsFat4';
+import darkModeLegsFat4Xml from '../assets/darkMode/darkModeLegsFat4';
+
 import murmelHandsXml from '../assets/murmelHands';
+import darkModeHandsXml from '../assets/darkMode/darkModeHands';
+
 import Murmel from './Murmel';
 import Button from './Button';
 import NumberInput from './NumberInput';
@@ -20,8 +32,10 @@ import createEntry from '../api/createEntry';
 import { sortEntriesByDate } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 const EntryForm = () => {
+  const { theme } = useThemeContext();
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
@@ -124,7 +138,7 @@ const EntryForm = () => {
     }
   };
 
-  const renderLegs = () => {
+  const renderLightModeLegs = () => {
     if (eurosSpentToday < 20) {
       return <SvgXml xml={murmelLegsXml} width="150" height="400"/>
     }
@@ -140,6 +154,40 @@ const EntryForm = () => {
     return <SvgXml xml={murmelLegsFat4Xml} width="150" height="400"/>
   }
 
+  const renderDarkModeLegs = () => {
+    if (eurosSpentToday < 20) {
+      return <SvgXml xml={murmelDarkModeLegsXml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 50) {
+      return <SvgXml xml={darkModeLegsFat1Xml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 100) {
+      return <SvgXml xml={darkModeLegsFat2Xml} width="150" height="400"/>
+    }
+    if (eurosSpentToday < 150) {
+      return <SvgXml xml={darkModeLegsFat3Xml} width="150" height="400"/>
+    }
+    return <SvgXml xml={darkModeLegsFat4Xml} width="150" height="400"/>
+  }
+
+  const renderLegs = () => {
+    if (theme === 'light') {
+      return renderLightModeLegs();
+    }
+    else {
+      return renderDarkModeLegs();
+    }
+  }
+
+  const renderHands = () => {
+    if (theme === 'light') {
+      return <SvgXml xml={murmelHandsXml} width="200" height="100" />
+    }
+    else {
+      return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
+    }
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
@@ -148,7 +196,7 @@ const EntryForm = () => {
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
         <View style={styles.handsContainer}>
-          {!isModalOpen && <SvgXml xml={murmelHandsXml} width="200" height="100" />}
+          {!isModalOpen && renderHands()}
         </View>
         <Animated.View style={[{ transform: [{ translateX: categoryInputAnim }] }, styles.animatedContainer]}>
           <CategoryPicker 

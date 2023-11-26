@@ -37,6 +37,7 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
         value={valueToString(amount)}
         onChangeText={handleChange}
         placeholder={t('amountPlaceholder')}
+        placeholderTextColor={theme === 'light' ? '#999' : '#CCC'}
       />
     </View>
   );
@@ -57,26 +58,8 @@ const getStyles = (theme: string) => StyleSheet.create({
     height: 40,
     borderWidth: 1,
     padding: 10,
-  },
-  inputDisabled: {
-    color: '#C7C7CD',
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  label: {
-    marginBottom: 8,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  input: {
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
+    borderColor: theme === 'light' ? 'black' : 'white',
+    color: theme === 'light' ? '#121212' : 'white',
   },
   inputDisabled: {
     color: '#C7C7CD',
