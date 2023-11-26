@@ -8,7 +8,7 @@ import { Screen } from '../types/Screen';
 import { useAppContext } from '../context/AppContext';
 
 const BaseScreen = () => {
-  const { currentScreen, userId } = useAppContext();
+  const { currentScreen } = useAppContext();
 
   const renderScreen = () => {
     if (currentScreen === Screen.INPUT) {
@@ -20,7 +20,6 @@ const BaseScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>User id: {userId}</Text>
       {renderScreen()}
     </View>
   );

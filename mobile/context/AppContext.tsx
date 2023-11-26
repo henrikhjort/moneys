@@ -23,6 +23,7 @@ interface UserContextProps {
   setIsRefreshing: (isRefreshing: boolean) => void;
   eurosSpentToday: number;
   userId: string;
+  entryDeleted: boolean;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -39,6 +40,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [cumulativeAmount, setCumulativeAmount] = useState<number>(0);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [eurosSpentToday, setEurosSpentToday] = useState<number>(0);
+  const [entryDeleted, setEntryDeleted] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -53,6 +55,14 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     }
     fetchUserId();
   }, []);
+
+  useEffect(() => {
+    if (entryDeleted) {
+      setTimeout(() => {
+        setEntryDeleted(false);
+      }, 1000);
+    }
+  }, [entryDeleted])
 
   useEffect(() => {
     const today = new Date();
@@ -82,6 +92,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       await deleteEntry(id, userId);
       const newEntries = entries.filter((entry) => entry.id !== id);
       setEntries(newEntries);
+      setEntryDeleted(true);
     } catch (error) {
       console.log(error);
     }
@@ -118,6 +129,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       setIsRefreshing,
       eurosSpentToday,
       userId,
+      entryDeleted,
     }}>
       {children}
     </AppContext.Provider>

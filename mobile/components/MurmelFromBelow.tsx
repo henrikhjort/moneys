@@ -4,19 +4,20 @@ import { SvgXml } from 'react-native-svg';
 
 import murmelFromBelowXml from '../assets/murmelFromBelow';
 import grabbingMurmelXml from '../assets/grabbingMurmel';
+import angryGrabbingXml from '../assets/angryGrabbing';
 import { useAppContext } from '../context/AppContext';
 
 const MurmelFromBelow = () => {
-  const { isRefreshing } = useAppContext();
+  const { isRefreshing, entryDeleted } = useAppContext();
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (isRefreshing) {
+    if (isRefreshing || entryDeleted) {
       startBounce();
     } else {
       bounceAnim.setValue(0);
     }
-  }, [isRefreshing]);
+  }, [isRefreshing, entryDeleted]);
 
   const startBounce = () => {
     Animated.loop(
@@ -35,10 +36,20 @@ const MurmelFromBelow = () => {
     ).start();
   };
 
+  const renderMurmelSvg = () => {
+    if (isRefreshing) {
+      return <SvgXml xml={grabbingMurmelXml} width="150" height="150"/>;
+    } else if (entryDeleted) {
+      return <SvgXml xml={angryGrabbingXml} width="150" height="150"/>;
+    } else {
+      return <SvgXml xml={murmelFromBelowXml} width="150" height="150"/>;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Animated.View style={{ transform: [{ translateY: bounceAnim }] }}>
-        {isRefreshing ? <SvgXml xml={grabbingMurmelXml} width="150" height="150"/> : <SvgXml xml={murmelFromBelowXml} width="150" height="150"/>}
+        {renderMurmelSvg()}
       </Animated.View>
     </View>
   );
