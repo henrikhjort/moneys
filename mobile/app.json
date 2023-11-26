@@ -1,21 +1,18 @@
 {
   "expo": {
-    "name": "mobile",
-    "slug": "mobile",
+    "name": "Säästösaukko",
+    "slug": "saastosaukko",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "scheme": "myapp",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.saastosaukko.appname",
+      "supportsTablet": false
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +22,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "855939d3-bbc2-4295-bf1c-fecf02043aed"
+      }
     }
   }
 }
