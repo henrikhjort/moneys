@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontVariant: ['small-caps'],
     paddingRight: 5,
+    color: 'red',
   },
   settingsIcon: {
     marginTop: 2,

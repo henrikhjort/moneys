@@ -8,7 +8,6 @@ import murmelAngryXml from '../assets/angryMurmel';
 import happyMurmelXml from '../assets/happyMurmel';
 import moneyEyesXml from '../assets/moneyEyes';
 import murmelMouthOpenXml from '../assets/murmelMouthOpen';
-import settingsMurmelXml from '../assets/settingsMurmel';
 
 import { useAppContext } from '../context/AppContext';
 
@@ -43,9 +42,6 @@ const Murmel = ({ angry, happy, greedy }: MurmelProps) => {
     }
     if (isBrowsingCategories) {
       return <SvgXml xml={murmelMouthOpenXml} width="150" height="150"/>;
-    }
-    if (isSettingsOpen) {
-      return <SvgXml xml={settingsMurmelXml} width="150" height="150"/>;
     }
     if (greedy) {
       return <SvgXml xml={moneyEyesXml} width="150" height="150"/>;

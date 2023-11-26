@@ -1,14 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
+import CategoryEditor from './CategoryEditor';
+import ThemeSwitcher from './ThemeSwitcher';
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
+import Button from './Button';
+
+enum Menu {
+  Root = 'Root',
+  CategoryEditor = 'CategoryEditor',
+}
 
 const SettingsModal = () => {
+  const { t } = useTranslation();
   const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
+  const [menu, setMenu] = useState<Menu>(Menu.Root);
 
   const handleClose = () => {
     setIsSettingsOpen(false);
   };
+
+  const renderMenu = () => {
+    switch (menu) {
+      case Menu.CategoryEditor:
+        return <CategoryEditor />;
+      default:
+        return (
+          <View style={styles.menuList}>
+            <Button style={styles.menuListItem} title={t('menu_categories')} onPress={() => setMenu(Menu.CategoryEditor)} />
+            <ThemeSwitcher />
+          </View>
+        );
+    }
+  }
+
+  const handleBack = () => {
+    setMenu(Menu.Root);
+  }
 
   return (
     <Modal
@@ -16,15 +48,34 @@ const SettingsModal = () => {
       transparent={true}
       visible={isSettingsOpen}
       onRequestClose={handleClose}>
-      <TouchableOpacity style={styles.overlay} onPress={handleClose} activeOpacity={1}>
+      <View style={styles.overlay}>
         <View style={styles.modalView}>
+          {menu === Menu.Root && (
+            <Text style={styles.title}>Asetukset {theme}</Text>
+          )}
+          <View style={styles.safeArea}></View>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleClose}
+          >
+            <Text style={styles.closeButtonText}>X</Text>
+          </TouchableOpacity>
+          {menu !== Menu.Root && (
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={handleBack}
+          >
+            <Text style={styles.backButtonText}>{"Takaisin"}</Text>
+          </TouchableOpacity>
+          )}
+          {renderMenu()}
         </View>
-      </TouchableOpacity>
+      </View>
     </Modal>
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center',
@@ -32,11 +83,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalView: {
-    width: '80%',
-    height: '60%',
-    backgroundColor: 'white',
+    width: '90%',
+    height: '90%',
+    backgroundColor: theme === 'light' ? 'white' : '#121212',
     borderRadius: 4,
-    padding: 35,
+    padding: 20,
     alignItems: 'center',
     shadowOffset: {
       width: 0,
@@ -45,16 +96,48 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    position: 'relative',
   },
-  textStyle: {
-    color: 'white',
+  menuList: {
+    flex: 1,
+    width: '100%',
+  },
+  menuListItem: {
+    marginBottom: 10,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    paddingTop: 10,
+    paddingRight: 20,
+  },
+  closeButtonText: {
+    fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: theme === 'light' ? '#121212' : 'white',
   },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+  backButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    padding: 10,
   },
+  backButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme === 'light' ? '#121212' : 'white',
+  },
+  safeArea: {
+    height: 45,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: theme === 'light' ? '#121212' : 'white',
+  }
 });
 
 export default SettingsModal;
+

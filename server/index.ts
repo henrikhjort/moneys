@@ -4,9 +4,9 @@ import mongoose from 'mongoose';
 
 import type { Entry } from './types/Entry';
 import EntryModel from './db/models/Entry';
+import CustomCategoryModel from './db/models/CustomCategory';
 
 import validateEntry from './utils/validateEntry';
-import { getDefaultCategories } from './utils/categories';
 import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMonthUTC } from './utils/time';
 
 dotenv.config();
@@ -258,12 +258,91 @@ app.get('/api/categories', async (req: Request, res: Response) => {
   }
 
   try {
-    // Get default categories and user specified custom categories.
-    const defaultCategories = getDefaultCategories();
-    res.status(200).json(defaultCategories);
+    // Get user categories from db.
+    const categoryObjects = await CustomCategoryModel.find({userId,});
+    const categories = categoryObjects.map((categoryObject) => categoryObject.category);
+    res.status(200).json(categories);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error retrieving data', error: error });
+  }
+});
+
+app.post('/api/categories', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  const category = req.body.category;
+  try {
+    const existingCategory = await CustomCategoryModel.findOne({ userId, category });
+    if (existingCategory) {
+      res.status(409).json({ message: 'Category already exists' }); // 409 Conflict
+      return;
+    }
+
+    const data = new CustomCategoryModel({ category, userId });
+    const dataToSave = await data.save();
+    res.status(200).json(dataToSave);
+
+  } catch (error) {
+    res.status(400).json({ message: error });
+  }
+});
+
+app.delete('/api/categories/:category', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  const category = req.params.category;
+
+  try {
+    const categoryToDelete = await CustomCategoryModel.findOne({ category: category, userId });
+    if (!categoryToDelete) {
+      res.status(404).json({ message: 'Category not found or does not belong to the user' });
+      return;
+    }
+    const deletedCategory = await CustomCategoryModel.findOneAndDelete({ category: categoryToDelete.category, userId });
+    if (!deletedCategory) {
+      res.status(404).json({ message: 'Entry not found' });
+    } else {
+      res.status(200).json({ message: 'Entry deleted', category: deletedCategory.category });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting entry', error: error });
   }
 });
 

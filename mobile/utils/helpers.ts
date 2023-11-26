@@ -49,3 +49,14 @@ export const sortEntriesByDate = (entries: Entry[]) => {
     return dateB.getTime() - dateA.getTime();
   });
 };
+
+export const getDefaultCategories = (): string[] => {
+  return [
+    'Food 🍔',
+    'Drink 🍹',
+    'Travel 🚀',
+    'Car 🚗',
+    'Electronics 📱',
+    'Other ❓',
+  ];
+};

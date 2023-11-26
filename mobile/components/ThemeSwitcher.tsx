@@ -1,31 +1,23 @@
 import React from 'react';
 import { Text, StyleSheet, Pressable, StyleProp, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { useThemeContext } from '../context/ThemeContext';
 
-type ButtonProps = {
-  onPress: () => void;
-  title: string;
-  disabled?: boolean;
-  style?: StyleProp<any>;
-  isLoading?: boolean;
-};
-
-const Button = ({ onPress, title, disabled = false, style, isLoading }: ButtonProps) => {
-  const { theme } = useThemeContext();
+const ThemeSwitcher = () => {
+  const { t } = useTranslation();
+  const { theme, toggleTheme } = useThemeContext();
   const styles = getStyles(theme);
+
   return (
     <Pressable
-      disabled={disabled}
       style={({ pressed }) => [
         styles.button,
         pressed && styles.pressed,
-        disabled && styles.disabled,
-        style,
       ]}
-      onPress={onPress}
+      onPress={toggleTheme}
     >
-      <Text style={styles.text}>{isLoading ? <ActivityIndicator size="small" color="#C7C7CD" /> : `${title}`}</Text>
+      <Text style={styles.text}>{t('menu_theme')}</Text>
     </Pressable>
   );
 };
@@ -44,9 +36,6 @@ const getStyles = (theme: string) => StyleSheet.create({
   pressed: {
     backgroundColor: '#333',
   },
-  disabled: {
-    backgroundColor: '#999',
-  },
   text: {
     fontSize: 16,
     lineHeight: 21,
@@ -57,4 +46,4 @@ const getStyles = (theme: string) => StyleSheet.create({
 });
 
 
-export default Button;
+export default ThemeSwitcher;

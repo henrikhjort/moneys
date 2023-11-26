@@ -19,12 +19,14 @@ import type { Entry } from '../types/Entry';
 import createEntry from '../api/createEntry';
 import { sortEntriesByDate } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 const EntryForm = () => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
-  const { userId, entries, setEntries, eurosSpentToday } = useAppContext();
+  const { entries, setEntries, eurosSpentToday } = useAppContext();
+  const { userId } = useUserContext();
   const [amount, setAmount] = useState<number | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
@@ -88,6 +90,7 @@ const EntryForm = () => {
       createdAt: new Date().toUTCString(),
     };
     try {
+      if (!userId) return;
       setIsLoading(true);
       const createdEntry = await createEntry(data, userId);
       const entry: Entry = {

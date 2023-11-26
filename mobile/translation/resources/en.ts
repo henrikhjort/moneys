@@ -20,4 +20,11 @@ export default {
   this_month: 'This month',
   money_spent: 'Money spent',
   settings: 'Settings',
+  category_name: 'Category name',
+  category_emoji: 'Select emoji',
+  category_added: 'Category added',
+  category_add_fail: 'Server error',
+  category_exists: 'Already exists!',
+  menu_categories: 'Edit categories',
+  menu_theme: 'Change theme',
 }

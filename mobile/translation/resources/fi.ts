@@ -20,4 +20,12 @@ export default {
   this_month: 'Tässä kuussa',
   money_spent: 'Rahaa käytetty',
   settings: 'Asetukset',
+  category_name: 'Kirjoita kategorian nimi',
+  category_emoji: 'Valitse emoji',
+  category_add: 'Lisää',
+  category_added: 'Kategoria lisätty',
+  category_add_fail: 'Palvelinvirhe',
+  category_exists: 'On jo olemassa!',
+  menu_categories: 'Muokkaa kategorioita',
+  menu_theme: 'Vaihda teemaa',
 }

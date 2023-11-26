@@ -6,8 +6,8 @@ import ViewPeriod from '../types/ViewPeriod';
 
 import getEntries from '../api/getEntries';
 import deleteEntry from '../api/deleteEntry';
-
-import { generateId, getId, setId } from '../utils/storage';
+import { useUserContext } from './UserContext';
+import { useThemeContext } from './ThemeContext';
 
 interface UserContextProps {
   entries: Entry[];
@@ -22,7 +22,6 @@ interface UserContextProps {
   isRefreshing: boolean;
   setIsRefreshing: (isRefreshing: boolean) => void;
   eurosSpentToday: number;
-  userId: string;
   entryDeleted: boolean;
   isBrowsingCategories: boolean;
   setIsBrowsingCategories: (isBrowsingCategories: boolean) => void;
@@ -37,7 +36,6 @@ interface AppProviderProps {
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [userId, setUserId] = useState<string>('');
   const [entries, setEntries] = useState<Entry[]>([]);
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.INPUT);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>(ViewPeriod.Today);
@@ -48,19 +46,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [isBrowsingCategories, setIsBrowsingCategories] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchUserId = async () => {
-      const id = await getId();
-      if (!id) {
-        const newId = generateId();
-        await setId(newId);
-        setUserId(newId);
-      } else {
-        setUserId(id);
-      }
-    }
-    fetchUserId();
-  }, []);
+  const { userId } = useUserContext();
 
   useEffect(() => {
     if (entryDeleted) {
@@ -87,6 +73,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
 
   const fetchEntries = async (viewPeriod: ViewPeriod) => {
+    if (!userId) return;
     setIsRefreshing(true);
     const entries = await getEntries(viewPeriod, userId);
     setEntries(entries);
@@ -94,6 +81,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   }
 
   const handleDeleteEntry = async (id: string) => {
+    if (!userId) return;
     try {
       await deleteEntry(id, userId);
       const newEntries = entries.filter((entry) => entry.id !== id);
@@ -109,7 +97,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       await fetchEntries(viewPeriod);
     }
     fetch();
-  }, [viewPeriod]);
+  }, [viewPeriod, userId]);
 
   useEffect(() => {
     const cumulativeAmount = getCumulativeAmount(entries);
@@ -134,7 +122,6 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       isRefreshing,
       setIsRefreshing,
       eurosSpentToday,
-      userId,
       entryDeleted,
       isBrowsingCategories,
       setIsBrowsingCategories,

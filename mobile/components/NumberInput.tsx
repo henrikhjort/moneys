@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { TextInput, View, Text, StyleSheet, Keyboard } from 'react-native';
+import React from 'react';
+import { TextInput, View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
+
+import { useThemeContext } from '../context/ThemeContext';
 
 type NumberInputProps = {
   label?: string;
@@ -10,6 +12,8 @@ type NumberInputProps = {
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, disabled }) => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const handleChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, ''); // Ensures only numbers are entered
@@ -37,6 +41,27 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
     </View>
   );
 };
+
+const getStyles = (theme: string) => StyleSheet.create({
+  container: {
+    width: '100%',
+    marginBottom: 16,
+  },
+  label: {
+    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: theme === 'light' ? '#121212' : 'white',
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    padding: 10,
+  },
+  inputDisabled: {
+    color: '#C7C7CD',
+  },
+});
 
 const styles = StyleSheet.create({
   container: {

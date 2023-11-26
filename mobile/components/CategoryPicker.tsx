@@ -9,7 +9,9 @@ import murmelHandsLeftXml from '../assets/murmelHandsLeft';
 import murmelHandsRightXml from '../assets/murmelHandsRight';
 
 import getCategories from '../api/getCategories';
+import { getDefaultCategories } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 type CategoryPickerProps = {
   label?: string;
@@ -26,19 +28,16 @@ enum Hands {
 
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
   const { t } = useTranslation();
-  const { setIsBrowsingCategories, userId } = useAppContext();
+  const { setIsBrowsingCategories } = useAppContext();
+  const { customCategories } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
   const [hands, setHands] = useState<Hands>(Hands.LEFT);
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const categories = await getCategories(userId);
-      setCategories(categories);
-    }
-
-    fetchCategories();
-  }, []);
+    const defaultCategories = getDefaultCategories();
+    setCategories([...defaultCategories, ...customCategories]);
+  }, [customCategories]);
 
   useEffect(() => {
     let intervalId: any;
