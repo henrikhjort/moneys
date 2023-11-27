@@ -7,11 +7,16 @@ import { useAppContext } from '../context/AppContext';
 
 import type { Entry } from '../types/Entry';
 
+import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
+
 type EntryListItemProps = {
   entry: Entry;
 }
 
 const EntryListItem = ({ entry }: EntryListItemProps) => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const { handleDeleteEntry } = useAppContext();
@@ -38,12 +43,12 @@ const EntryListItem = ({ entry }: EntryListItemProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: theme === 'light' ? black : white,
   },
   dataContainer: {
     flex: 1,
@@ -51,6 +56,7 @@ const styles = StyleSheet.create({
   },
   dataText: {
     marginBottom: 5,
+    color: theme === 'light' ? black : white,
   },
   deleteContainer: {
     justifyContent: 'center',

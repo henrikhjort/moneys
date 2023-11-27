@@ -27,4 +27,6 @@ export default {
   category_exists: 'Already exists!',
   menu_categories: 'Edit categories',
   menu_theme: 'Change theme',
+  dark_mode: 'Dark mode',
+  light_mode: 'Light mode',
 }

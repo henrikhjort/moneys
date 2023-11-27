@@ -1,13 +1,16 @@
 import React from 'react';
-import { Text, StyleSheet, Pressable, StyleProp, ActivityIndicator } from 'react-native';
+import { Text, StyleSheet, Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack } from '../styles/colors';
 
 const ThemeSwitcher = () => {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useThemeContext();
   const styles = getStyles(theme);
+
+  const text = theme === 'light' ? t('dark_mode') : t('light_mode');
 
   return (
     <Pressable
@@ -17,7 +20,7 @@ const ThemeSwitcher = () => {
       ]}
       onPress={toggleTheme}
     >
-      <Text style={styles.text}>{t('menu_theme')}</Text>
+      <Text style={styles.text}>{text}</Text>
     </Pressable>
   );
 };
@@ -30,11 +33,11 @@ const getStyles = (theme: string) => StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: theme === 'light' ? '#121212' : 'white',
+    backgroundColor: theme === 'light' ? black : white,
     width: '100%',
   },
   pressed: {
-    backgroundColor: '#333',
+    backgroundColor: theme === 'light' ? secondaryBlack : secondaryWhite,
   },
   text: {
     fontSize: 16,

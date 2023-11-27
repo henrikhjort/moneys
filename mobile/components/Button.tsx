@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, Pressable, StyleProp, ActivityIndicator } from 'react-native';
 
 import { useThemeContext } from '../context/ThemeContext';
+import { white, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 type ButtonProps = {
   onPress: () => void;
@@ -38,11 +39,11 @@ const getStyles = (theme: string) => StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: theme === 'light' ? '#121212' : 'white',
+    backgroundColor: theme === 'light' ? black : purple,
     width: '100%',
   },
   pressed: {
-    backgroundColor: '#333',
+    backgroundColor: theme === 'light' ? secondaryBlack : secondaryPurple,
   },
   disabled: {
     backgroundColor: '#999',
@@ -52,7 +53,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: theme === 'light' ? 'white' : '#121212',
+    color: theme === 'light' ? white : black,
   },
 });
 

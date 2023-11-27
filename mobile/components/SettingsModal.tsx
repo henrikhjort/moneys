@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { SvgXml } from 'react-native-svg';
 
 import CategoryEditor from './CategoryEditor';
 import ThemeSwitcher from './ThemeSwitcher';
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
 import Button from './Button';
+
+import settingsMurmelXml from '../assets/settingsMurmel';
+import darkModeSettingsMurmelXml from '../assets/darkMode/darkModeSettingsMurmel';
 
 enum Menu {
   Root = 'Root',
@@ -42,6 +46,15 @@ const SettingsModal = () => {
     setMenu(Menu.Root);
   }
 
+  const renderSvg = () => {
+    if (menu === Menu.Root) {
+      if (theme === 'light') {
+        return <SvgXml xml={settingsMurmelXml} width="150" height="150"/>;
+      }
+      return <SvgXml xml={darkModeSettingsMurmelXml} width="150" height="150"/>;
+    }
+  }
+
   return (
     <Modal
       animationType="none"
@@ -69,6 +82,7 @@ const SettingsModal = () => {
           </TouchableOpacity>
           )}
           {renderMenu()}
+          {renderSvg()}
         </View>
       </View>
     </Modal>
@@ -109,8 +123,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    paddingTop: 10,
-    paddingRight: 20,
+    padding: 10,
   },
   closeButtonText: {
     fontSize: 16,
@@ -135,6 +148,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
+    marginTop: 10,
     color: theme === 'light' ? '#121212' : 'white',
   }
 });

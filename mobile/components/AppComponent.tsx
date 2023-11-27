@@ -25,7 +25,7 @@ const getStyles = (theme: string) => StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 16,
+    padding: 12,
     backgroundColor: theme === 'light' ? 'white' : '#121212',
   },
 });

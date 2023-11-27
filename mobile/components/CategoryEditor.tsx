@@ -22,7 +22,6 @@ const CategoryEditor = () => {
       if (!userId) return;
       try {
         const categories = await getCategories(userId);
-        console.log(categories);
         setCustomCategories(categories);
       } catch (error) {
         console.error(error);
@@ -45,7 +44,6 @@ const CategoryEditor = () => {
       }
 
       const res = await createCategory(categoryName, userId);
-      console.log(res);
 
       if (res.status === 409) {
         setButtonStyle(styles.error);

@@ -22,7 +22,6 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const [theme, setTheme] = useState<ThemeType>('light');
 
   const toggleTheme = () => {
-    console.log('toggleTheme');
     setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'));
   };
 

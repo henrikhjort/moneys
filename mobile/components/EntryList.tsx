@@ -6,8 +6,12 @@ import Summary from './Summary';
 import EntryListItem from './EntryListItem';
 
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 const EntryList = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const [refreshing, setRefreshing] = useState(false);
   const { entries, viewPeriod, fetchEntries } = useAppContext();
 
@@ -30,7 +34,7 @@ const EntryList = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -39,7 +43,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
     zIndex: 999,
   },
   dataContainer: {

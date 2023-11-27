@@ -61,6 +61,7 @@ const getStyles = (theme: string) => StyleSheet.create({
   },
   settingsTextRow: {
     flexDirection: 'row',
+    padding: 20,
   },
   settingsText: {
     fontSize: 15,

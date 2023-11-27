@@ -6,6 +6,7 @@ import { Screen } from '../types/Screen';
 
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 const TabSelector = () => {
   const { theme } = useThemeContext();
@@ -42,29 +43,33 @@ const getStyles = (theme: string) => StyleSheet.create({
   tabsContainer: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 16,
-    backgroundColor: theme === 'light' ? 'white' : '#121212',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    backgroundColor: theme === 'light' ? white : black,
   },
   tab: {
     flex: 1,
-    padding: 10,
-    borderWidth: 1,
-    borderRadius: 4,
+    paddingVertical: 10,
+    borderBottomColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 4,
-    backgroundColor: theme === 'light' ? 'white' : '#121212',
-    borderColor: theme === 'light' ? 'black' : 'white',
+    marginHorizontal: 12,
+    backgroundColor: theme === 'light' ? white : black,
+    borderColor: theme === 'light' ? black : white,
   },
   activeTab: {
-    backgroundColor: theme === 'light' ? 'black' : 'white',
+    borderBottomColor: theme === 'light' ? black : purple,
+    borderBottomWidth: 3,
   },
   tabText: {
     textAlign: 'center',
-    color: theme === 'light' ? '#121212' : 'white', // Default color for both themes
+    color: theme === 'light' ? '#121212' : 'white',
+    fontSize: 16,
+    fontVariant: ['small-caps'],
   },
   activeTabText: {
-    color: theme === 'light' ? 'white' : '#121212', // Color for active tab text
+    color: theme === 'light' ? '#121212' : 'white',
   },
 });
 

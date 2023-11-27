@@ -3,8 +3,11 @@ import { Text, View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
 
 const Summary = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { cumulativeAmount, viewPeriod } = useAppContext();
   return (
@@ -15,7 +18,7 @@ const Summary = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -26,6 +29,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: theme === 'light' ? 'black' : 'white',
   }
 });
 

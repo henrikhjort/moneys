@@ -5,8 +5,12 @@ import { useTranslation } from 'react-i18next';
 import ViewPeriod from '../types/ViewPeriod';
 
 import { useAppContext } from '../context/AppContext';
+import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 const ViewPeriodSelector = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { viewPeriod, setViewPeriod } = useAppContext();
 
@@ -37,7 +41,7 @@ const ViewPeriodSelector = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   tabsContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -52,15 +56,21 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: theme === 'light' ? 'black' : 'white',
   },
   activeTab: {
-    backgroundColor: 'black',
+    borderWidth: 1,
+    borderColor: theme === 'light' ? black : purple,
+    backgroundColor: theme === 'light' ? black : purple,
   },
   tabText: {
     textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: theme === 'light' ? black : white,
   },
   activeTabText: {
-    color: 'white',
+    color: theme === 'light' ? white : black,
   }
 });
 

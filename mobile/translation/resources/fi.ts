@@ -28,4 +28,6 @@ export default {
   category_exists: 'On jo olemassa!',
   menu_categories: 'Muokkaa kategorioita',
   menu_theme: 'Vaihda teemaa',
+  dark_mode: 'Tumma teema',
+  light_mode: 'Vaalea teema',
 }
