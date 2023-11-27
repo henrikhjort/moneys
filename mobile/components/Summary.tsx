@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { white, black } from '../styles/colors';
 
 const Summary = () => {
   const { theme } = useThemeContext();
@@ -29,7 +30,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: theme === 'light' ? 'black' : white,
+    color: theme === 'light' ? black : white,
   }
 });
 

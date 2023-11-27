@@ -33,4 +33,5 @@ export default {
   light_mode: 'Vaalea teema',
   theme_stats_dark: '% käyttäjistä elää pimeydessä',
   theme_stats_light: '% käyttäjistä elää valossa',
+  back: 'Takaisin',
 }

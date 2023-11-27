@@ -115,7 +115,7 @@ const SettingsModal = () => {
   }
 
   const themeStatsText = () => {
-    if (theme && themeStats) {
+    if (theme && themeStats && menu === Menu.Root) {
       if (theme === 'dark' && themeStats.darkUserPercentage > 0) {
         return `${themeStats.darkUserPercentage}${t('theme_stats_dark')}`;
       }
