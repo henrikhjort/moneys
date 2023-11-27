@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 import { generateId, getId, setId } from '../utils/storage';
+import getCategories from '../api/getCategories';
 
 type UserContextProps = {
   userId: string | null;
@@ -25,6 +26,19 @@ type UserProviderProps = {
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [customCategories, setCustomCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      if (!userId) return;
+      try {
+        const categories = await getCategories(userId);
+        setCustomCategories(categories);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchCategories();
+  }, [userId]);
 
   useEffect(() => {
     const fetchUserId = async () => {
