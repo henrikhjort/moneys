@@ -26,7 +26,9 @@ export default {
   category_add_fail: 'Server error',
   category_exists: 'Already exists!',
   menu_categories: 'Edit categories',
+  menu_copy_user_id: 'Copy user id',
   menu_theme: 'Change theme',
   dark_mode: 'Dark mode',
   light_mode: 'Light mode',
+  back: 'Back',
 }

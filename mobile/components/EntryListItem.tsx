@@ -43,7 +43,7 @@ const EntryListItem = ({ entry }: EntryListItemProps) => {
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     padding: 10,

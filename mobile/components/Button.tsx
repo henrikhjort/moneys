@@ -10,11 +10,12 @@ type ButtonProps = {
   disabled?: boolean;
   style?: StyleProp<any>;
   isLoading?: boolean;
+  icon?: any;
 };
 
-const Button = ({ onPress, title, disabled = false, style, isLoading }: ButtonProps) => {
+const Button = ({ onPress, title, disabled = false, style, isLoading, icon }: ButtonProps) => {
   const { theme } = useThemeContext();
-  const styles = getStyles(theme);
+  const styles = getStyles(icon, theme);
   return (
     <Pressable
       disabled={disabled}
@@ -27,12 +28,14 @@ const Button = ({ onPress, title, disabled = false, style, isLoading }: ButtonPr
       onPress={onPress}
     >
       <Text style={styles.text}>{isLoading ? <ActivityIndicator size="small" color="#C7C7CD" /> : `${title}`}</Text>
+      {icon && icon}
     </Pressable>
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (icon: any, theme: string | null) => StyleSheet.create({
   button: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
@@ -54,6 +57,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: theme === 'light' ? white : black,
+    marginRight: icon && 10,
   },
 });
 

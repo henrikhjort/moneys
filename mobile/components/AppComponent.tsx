@@ -18,7 +18,7 @@ const AppComponent = () => {
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: theme === 'light' ? 'white' : '#121212',

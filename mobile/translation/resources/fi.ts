@@ -27,7 +27,9 @@ export default {
   category_add_fail: 'Palvelinvirhe',
   category_exists: 'On jo olemassa!',
   menu_categories: 'Muokkaa kategorioita',
+  menu_copy_user_id: 'Kopioi käyttäjä id',
   menu_theme: 'Vaihda teemaa',
   dark_mode: 'Tumma teema',
   light_mode: 'Vaalea teema',
+  back: 'Takaisin',
 }

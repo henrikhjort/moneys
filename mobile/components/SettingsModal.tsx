@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
+import * as Clipboard from 'expo-clipboard';
 
 import CategoryEditor from './CategoryEditor';
 import ThemeSwitcher from './ThemeSwitcher';
 import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { success, successDark } from '../styles/colors';
+
 import Button from './Button';
 
 import settingsMurmelXml from '../assets/settingsMurmel';
 import darkModeSettingsMurmelXml from '../assets/darkMode/darkModeSettingsMurmel';
+import copyXml from '../assets/copy';
+import { use } from 'i18next';
 
 enum Menu {
   Root = 'Root',
@@ -20,13 +26,36 @@ enum Menu {
 const SettingsModal = () => {
   const { t } = useTranslation();
   const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
+  const { userId } = useUserContext();
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const [menu, setMenu] = useState<Menu>(Menu.Root);
+  const [userIdCopied, setUserIdCopied] = useState(false);
+  const [buttonStyle, setButtonStyle] = useState({});
+
+  useEffect(() => {
+    if (userIdCopied) {
+      setTimeout(() => {
+        setUserIdCopied(false);
+        setButtonStyle({});
+      }, 1000);
+    }
+  });
+
+  const copyIcon = <SvgXml xml={copyXml} width="15" height="15"/>;
 
   const handleClose = () => {
     setIsSettingsOpen(false);
   };
+
+
+  const handleUserIdClick = async () => {
+    if (userId) {
+      await Clipboard.setStringAsync(userId);
+      setUserIdCopied(true);
+      setButtonStyle(styles.success);
+    }
+  }
 
   const renderMenu = () => {
     switch (menu) {
@@ -36,6 +65,7 @@ const SettingsModal = () => {
         return (
           <View style={styles.menuList}>
             <Button style={styles.menuListItem} title={t('menu_categories')} onPress={() => setMenu(Menu.CategoryEditor)} />
+            <Button icon={copyIcon} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
             <ThemeSwitcher />
           </View>
         );
@@ -78,7 +108,7 @@ const SettingsModal = () => {
             style={styles.backButton}
             onPress={handleBack}
           >
-            <Text style={styles.backButtonText}>{"Takaisin"}</Text>
+            <Text style={styles.backButtonText}>{t('back')}</Text>
           </TouchableOpacity>
           )}
           {renderMenu()}
@@ -89,7 +119,7 @@ const SettingsModal = () => {
   );
 }
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: 'center',
@@ -117,7 +147,11 @@ const getStyles = (theme: string) => StyleSheet.create({
     width: '100%',
   },
   menuListItem: {
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  showUserId: {
+    marginBottom: 15,
+    backgroundColor: 'red',
   },
   closeButton: {
     position: 'absolute',
@@ -150,6 +184,9 @@ const getStyles = (theme: string) => StyleSheet.create({
     marginBottom: 10,
     marginTop: 10,
     color: theme === 'light' ? '#121212' : 'white',
+  },
+  success: {
+    backgroundColor: theme === 'light' ? success : successDark,
   }
 });
 

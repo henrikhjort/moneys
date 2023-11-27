@@ -44,7 +44,7 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   container: {
     width: '100%',
     marginBottom: 16,

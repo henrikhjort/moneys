@@ -46,7 +46,7 @@ const EntryScreen = () => {
   );
 }
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',

@@ -25,7 +25,7 @@ const ThemeSwitcher = () => {
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',

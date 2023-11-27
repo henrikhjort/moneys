@@ -172,7 +172,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   );
 };
 
-const getStyles = (theme: string) => StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   container: {
     width: '100%',
     marginBottom: 16,
