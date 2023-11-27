@@ -59,7 +59,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: theme === 'light' ? 'white' : '#121212',
+    color: theme === 'light' ? white : black,
   },
 });
 

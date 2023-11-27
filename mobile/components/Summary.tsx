@@ -29,7 +29,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: theme === 'light' ? 'black' : 'white',
+    color: theme === 'light' ? 'black' : white,
   }
 });
 

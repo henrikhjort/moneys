@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import { useThemeContext } from '../context/ThemeContext';
+import { white, black } from '../styles/colors';
 import BaseScreen from '../screens/BaseScreen';
 import TabSelector from '../components/TabSelector';
 
@@ -21,12 +22,12 @@ const AppComponent = () => {
 const getStyles = (theme: string | null) => StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: theme === 'light' ? 'white' : '#121212',
+    backgroundColor: theme === 'light' ? white : black,
   },
   container: {
     flex: 1,
     padding: 12,
-    backgroundColor: theme === 'light' ? 'white' : '#121212',
+    backgroundColor: theme === 'light' ? white : black,
   },
 });
 

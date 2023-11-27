@@ -64,12 +64,12 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   },
   tabText: {
     textAlign: 'center',
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
     fontSize: 16,
     fontVariant: ['small-caps'],
   },
   activeTabText: {
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
 });
 

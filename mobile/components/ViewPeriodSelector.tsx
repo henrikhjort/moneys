@@ -56,7 +56,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: theme === 'light' ? 'black' : 'white',
+    borderColor: theme === 'light' ? 'black' : white,
   },
   activeTab: {
     borderWidth: 1,

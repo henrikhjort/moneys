@@ -10,6 +10,7 @@ import EntryForm from '../components/EntryForm';
 import SettingsModal from '../components/SettingsModal';
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { black, white } from '../styles/colors';
 
 const EntryScreen = () => {
   const { theme } = useThemeContext();
@@ -67,7 +68,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     fontSize: 15,
     fontVariant: ['small-caps'],
     paddingRight: 5,
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   settingsIcon: {
     marginTop: 2,
