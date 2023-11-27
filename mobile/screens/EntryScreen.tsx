@@ -15,7 +15,7 @@ const EntryScreen = () => {
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const { t } = useTranslation();
-  const { setIsSettingsOpen } = useAppContext();
+  const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
 
   const handleSettingsPress = () => {
     setIsSettingsOpen(true);
@@ -33,12 +33,14 @@ const EntryScreen = () => {
   return (
     <View style={styles.container}>
       <EntryForm />
+      {!isSettingsOpen && (
       <View style={styles.settings}>
         <TouchableOpacity style={styles.settingsTextRow} onPress={handleSettingsPress}>
           <Text style={styles.settingsText}>{t('settings')}</Text>
           {renderPawPrint()}
         </TouchableOpacity>
       </View>
+      )}
       <SettingsModal />
     </View>
   );

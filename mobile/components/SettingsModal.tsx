@@ -83,7 +83,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalView: {
-    width: '90%',
+    width: '95%',
     height: '90%',
     backgroundColor: theme === 'light' ? 'white' : '#121212',
     borderRadius: 4,
