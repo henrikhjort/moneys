@@ -31,5 +31,6 @@ export default {
   menu_theme: 'Vaihda teemaa',
   dark_mode: 'Tumma teema',
   light_mode: 'Vaalea teema',
-  back: 'Takaisin',
+  theme_stats_dark: '% käyttäjistä elää pimeydessä',
+  theme_stats_light: '% käyttäjistä elää valossa',
 }

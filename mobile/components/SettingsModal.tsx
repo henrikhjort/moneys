@@ -9,18 +9,24 @@ import ThemeSwitcher from './ThemeSwitcher';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { white, black, purple, secondaryWhite, secondaryBlack } from '../styles/colors';
 import { success, successDark } from '../styles/colors';
-
 import Button from './Button';
 
 import settingsMurmelXml from '../assets/settingsMurmel';
 import darkModeSettingsMurmelXml from '../assets/darkMode/darkModeSettingsMurmel';
 import copyXml from '../assets/copy';
-import { use } from 'i18next';
+import copyDarkXml from '../assets/darkMode/copyDark';
+import getThemeStats from '../api/getThemeStats';
 
 enum Menu {
   Root = 'Root',
   CategoryEditor = 'CategoryEditor',
+}
+
+type ThemeStats = {
+  darkUserPercentage: number;
+  lightUserPercentage: number;
 }
 
 const SettingsModal = () => {
@@ -32,6 +38,7 @@ const SettingsModal = () => {
   const [menu, setMenu] = useState<Menu>(Menu.Root);
   const [userIdCopied, setUserIdCopied] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
+  const [themeStats, setThemeStats] = useState<ThemeStats | null>(null);
 
   useEffect(() => {
     if (userIdCopied) {
@@ -42,7 +49,31 @@ const SettingsModal = () => {
     }
   });
 
-  const copyIcon = <SvgXml xml={copyXml} width="15" height="15"/>;
+  useEffect(() => {
+    const getStats = async () => {
+      if (userId) {
+        try {
+          const res = await getThemeStats(userId);
+          setThemeStats(res);
+        } catch (error) {
+          return;
+        }
+      }
+    }
+    if (userId) {
+      getStats();
+    }
+  }, [theme, userId]);
+
+  const copyIconLight = <SvgXml xml={copyXml} width="15" height="15"/>;
+  const copyIconDark = <SvgXml xml={copyDarkXml} width="15" height="15"/>;
+
+  const copyIcon = () => {
+    if (theme === 'light') {
+      return copyIconDark;
+    }
+    return copyIconDark;
+  }
 
   const handleClose = () => {
     setIsSettingsOpen(false);
@@ -65,7 +96,7 @@ const SettingsModal = () => {
         return (
           <View style={styles.menuList}>
             <Button style={styles.menuListItem} title={t('menu_categories')} onPress={() => setMenu(Menu.CategoryEditor)} />
-            <Button icon={copyIcon} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
+            <Button icon={copyIcon()} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
             <ThemeSwitcher />
           </View>
         );
@@ -85,6 +116,17 @@ const SettingsModal = () => {
     }
   }
 
+  const themeStatsText = () => {
+    if (theme && themeStats) {
+      if (theme === 'dark' && themeStats.darkUserPercentage > 0) {
+        return `${themeStats.darkUserPercentage}${t('theme_stats_dark')}`;
+      }
+      else if (theme === 'light' && themeStats.lightUserPercentage > 0) {
+        return `${themeStats.lightUserPercentage}${t('theme_stats_light')}`;
+      }
+    }
+  }
+
   return (
     <Modal
       animationType="none"
@@ -96,6 +138,7 @@ const SettingsModal = () => {
           {menu === Menu.Root && (
             <Text style={styles.title}>{t('settings')}</Text>
           )}
+          <Text style={styles.themeStats}>{themeStatsText()}</Text>
           <View style={styles.safeArea}></View>
           <TouchableOpacity
             style={styles.closeButton}
@@ -126,10 +169,14 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
+  themeStats: {
+    fontSize: 12,
+    color: theme === 'light' ? black : white,
+  },
   modalView: {
     width: '95%',
     height: '90%',
-    backgroundColor: theme === 'light' ? 'white' : '#121212',
+    backgroundColor: theme === 'light' ? white : black,
     borderRadius: 4,
     padding: 20,
     alignItems: 'center',
@@ -149,10 +196,6 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   menuListItem: {
     marginBottom: 15,
   },
-  showUserId: {
-    marginBottom: 15,
-    backgroundColor: 'red',
-  },
   closeButton: {
     position: 'absolute',
     top: 10,
@@ -162,7 +205,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   closeButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   backButton: {
     position: 'absolute',
@@ -173,7 +216,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   safeArea: {
     height: 45,
@@ -183,7 +226,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     marginTop: 10,
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   success: {
     backgroundColor: theme === 'light' ? success : successDark,

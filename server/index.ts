@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import type { Entry } from './types/Entry';
 import EntryModel from './db/models/Entry';
 import CustomCategoryModel from './db/models/CustomCategory';
+import UserThemeModel from './db/models/UserTheme';
 
 import validateEntry from './utils/validateEntry';
 import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMonthUTC } from './utils/time';
@@ -345,6 +346,64 @@ app.delete('/api/categories/:category', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error deleting entry', error: error });
   }
 });
+
+app.post('/api/theme', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  const theme = req.body.theme; // Ensure this matches the request body key for theme
+  try {
+    let userTheme = await UserThemeModel.findOne({ userId });
+    if (userTheme) {
+      // Update existing theme
+      userTheme.theme = theme;
+    } else {
+      // Create new UserTheme
+      userTheme = new UserThemeModel({ userId, theme });
+    }
+    const savedTheme = await userTheme.save();
+    res.status(200).json(savedTheme);
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/theme', async (req: Request, res: Response) => {
+  try {
+    const totalThemes = await UserThemeModel.countDocuments();
+    const lightThemeCount = await UserThemeModel.countDocuments({ theme: 'light' });
+    const darkThemeCount = await UserThemeModel.countDocuments({ theme: 'dark' });
+
+    if (totalThemes === 0) {
+      return res.status(200).json({ lightUserPercentage: 0, darkUserPercentage: 0 });
+    }
+
+    const lightUserPercentage = Math.round((lightThemeCount / totalThemes) * 100);
+    const darkUserPercentage = Math.round((darkThemeCount / totalThemes) * 100);
+
+    res.status(200).json({ lightUserPercentage, darkUserPercentage });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
