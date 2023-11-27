@@ -40,7 +40,7 @@ const EntryForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
   const { entries, setEntries, eurosSpentToday } = useAppContext();
-  const { userId } = useUserContext();
+  const { userId, customCategories } = useUserContext();
   const [amount, setAmount] = useState<number | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
@@ -60,6 +60,10 @@ const EntryForm = () => {
       Animated.timing(animatedValue, { toValue: 0, duration: 50, useNativeDriver: true })
     ]).start();
   };
+
+  useEffect(() => {
+    setCategory(null);
+  }, [customCategories]);
 
   useEffect(() => {
     if (amount) {

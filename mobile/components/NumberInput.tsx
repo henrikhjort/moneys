@@ -60,6 +60,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     padding: 10,
     borderColor: theme === 'light' ? 'black' : 'white',
     color: theme === 'light' ? '#121212' : 'white',
+    fontSize: 16,
   },
   inputDisabled: {
     color: '#C7C7CD',

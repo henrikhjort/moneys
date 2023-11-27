@@ -51,7 +51,7 @@ const SettingsModal = () => {
       <View style={styles.overlay}>
         <View style={styles.modalView}>
           {menu === Menu.Root && (
-            <Text style={styles.title}>Asetukset {theme}</Text>
+            <Text style={styles.title}>{t('settings')}</Text>
           )}
           <View style={styles.safeArea}></View>
           <TouchableOpacity
