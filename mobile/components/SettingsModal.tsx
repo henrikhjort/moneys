@@ -63,17 +63,10 @@ const SettingsModal = () => {
     if (userId) {
       getStats();
     }
-  }, [theme, userId]);
+  }, [theme]);
 
   const copyIconLight = <SvgXml xml={copyXml} width="15" height="15"/>;
   const copyIconDark = <SvgXml xml={copyDarkXml} width="15" height="15"/>;
-
-  const copyIcon = () => {
-    if (theme === 'light') {
-      return copyIconDark;
-    }
-    return copyIconDark;
-  }
 
   const handleClose = () => {
     setIsSettingsOpen(false);
@@ -96,7 +89,12 @@ const SettingsModal = () => {
         return (
           <View style={styles.menuList}>
             <Button style={styles.menuListItem} title={t('menu_categories')} onPress={() => setMenu(Menu.CategoryEditor)} />
-            <Button icon={copyIcon()} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
+            {
+              theme === 'light' ?
+              <Button icon={copyIconDark} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
+              :
+              <Button icon={copyIconLight} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />
+            }
             <ThemeSwitcher />
           </View>
         );
