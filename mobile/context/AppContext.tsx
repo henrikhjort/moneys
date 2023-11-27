@@ -37,7 +37,6 @@ interface AppProviderProps {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [entries, setEntries] = useState<Entry[]>([]);
-  //console.log(entries);
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.INPUT);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>(ViewPeriod.Today);
   const [cumulativeAmount, setCumulativeAmount] = useState<number>(0);

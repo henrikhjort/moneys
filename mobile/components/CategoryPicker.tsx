@@ -134,6 +134,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
           {isPlaceholder ? t('categoryPlaceholder') : translateCategory(selectedValue)}
         </Text>
       </TouchableOpacity>
+
       <Modal
         visible={modalVisible}
         transparent
@@ -190,7 +191,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     borderColor: theme === 'light' ? black : white,
   },
   touchableText: {
-    fontSize: 16,
+    fontSize: 18,
     color: theme === 'light' ? black : white,
   },
   modalView: {

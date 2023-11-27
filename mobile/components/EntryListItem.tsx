@@ -57,6 +57,7 @@ const getStyles = (theme: string) => StyleSheet.create({
   dataText: {
     marginBottom: 5,
     color: theme === 'light' ? black : white,
+    fontSize: 16,
   },
   deleteContainer: {
     justifyContent: 'center',

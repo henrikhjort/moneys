@@ -140,8 +140,6 @@ app.get('/api/entries/today', async (req: Request, res: Response) => {
   try {
     const startStr = getStartOfTodayUTC();
     const endStr = getEndOfTodayUTC();
-    console.log('start', startStr);
-    console.log('end', endStr);
 
     const entries = await EntryModel.find({
       userId,

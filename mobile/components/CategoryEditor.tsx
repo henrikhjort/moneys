@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Keyboard, Animated, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import Button from './Button';
@@ -7,8 +7,12 @@ import CategoryListItem from './CategoryListItem';
 import { useUserContext } from '../context/UserContext';
 import createCategory from '../api/createCategory';
 import getCategories from '../api/getCategories';
+import { useThemeContext } from '../context/ThemeContext';
+import { white, black, placeholder, error, errorDark, success, successDark } from '../styles/colors';
 
 const CategoryEditor = () => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { userId, customCategories, setCustomCategories } = useUserContext();
   const [categoryName, setCategoryName] = useState('');
@@ -96,6 +100,7 @@ const CategoryEditor = () => {
           style={styles.input}
           value={categoryName}
           onChangeText={setCategoryName}
+          placeholderTextColor={placeholder}
         />
       </Animated.View>
       <Button title={buttonTitle} onPress={handleSave} style={buttonStyle} />
@@ -109,7 +114,7 @@ const CategoryEditor = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   container: {
     flex: 1,
     width: '100%',
@@ -118,18 +123,21 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
+    color: theme === 'light' ? black : white,
   },
   input: {
     height: 40,
     borderWidth: 1,
     padding: 10,
     marginBottom: 8,
+    color: theme === 'light' ? black : white,
+    borderColor: theme === 'light' ? black : white,
   },
   success: {
-    backgroundColor: '#2f7332',
+    backgroundColor: theme === 'light' ? success : successDark,
   },
   error: {
-    backgroundColor: '#D32F2F',
+    backgroundColor: theme === 'light' ? error : errorDark,
   },
   animatedContainer: {
     zIndex: 1,

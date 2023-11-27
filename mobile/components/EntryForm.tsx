@@ -33,9 +33,11 @@ import { sortEntriesByDate } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { error, errorDark, success, successDark } from '../styles/colors';
 
 const EntryForm = () => {
   const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttonStyle, setButtonStyle] = useState({});
@@ -220,7 +222,7 @@ const EntryForm = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   container: {
     width: '100%',
     alignItems: 'center',
@@ -235,10 +237,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   success: {
-    backgroundColor: '#2f7332',
+    backgroundColor: theme === 'light' ? success : successDark,
   },
   error: {
-    backgroundColor: '#D32F2F',
+    backgroundColor: theme === 'light' ? error : errorDark,
   },
   murmelLegs: {
     flex: 1,

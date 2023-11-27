@@ -126,7 +126,7 @@ const getStyles = (theme: string) => StyleSheet.create({
     padding: 10,
   },
   closeButtonText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     color: theme === 'light' ? '#121212' : 'white',
   },

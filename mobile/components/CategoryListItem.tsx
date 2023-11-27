@@ -4,12 +4,16 @@ import { useTranslation } from 'react-i18next';
 
 import deleteCategory from '../api/deleteCategory';
 import { useUserContext } from '../context/UserContext';
+import { useThemeContext } from '../context/ThemeContext';
+import { white, black, purple, secondaryPurple } from '../styles/colors';
 
 type CategoryListItemProps = {
   category: string;
 }
 
 const CategoryListItem = ({ category }: CategoryListItemProps) => {
+  const { theme } = useThemeContext();
+  const styles = getStyles(theme);
   const { t } = useTranslation();
   const { userId, customCategories, setCustomCategories } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +29,7 @@ const CategoryListItem = ({ category }: CategoryListItemProps) => {
   return (
     <View style={styles.itemContainer}>
       <View style={styles.dataContainer}>
-        <Text>{t(category)}</Text>
+        <Text style={styles.listItemText}>{t(category)}</Text>
       </View>
       <View style={styles.deleteContainer}>
         <TouchableOpacity onPress={handleDeleteCategory} style={styles.deleteButton}>
@@ -36,13 +40,17 @@ const CategoryListItem = ({ category }: CategoryListItemProps) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string) => StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    borderBottomColor: theme === 'light' ? black : white,
     alignItems: 'center',
+  },
+  listItemText: {
+    color: theme === 'light' ? black : white,
+    fontSize: 16,
   },
   dataContainer: {
     flex: 1,
