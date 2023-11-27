@@ -19,30 +19,30 @@ export const getHelsinkiTimeString = () => {
 
 export const getStartOfTodayUTC = () => {
   const now = new Date();
-  now.setUTCHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
   return now.toISOString();
 };
 
 export const getEndOfTodayUTC = () => {
   const now = new Date();
-  now.setUTCHours(23, 59, 59, 999);
+  now.setHours(23, 59, 59, 999);
   return now.toISOString();
 };
 
 export const getStartOfWeekUTC = () => {
   const now = new Date();
-  const dayOfWeek = now.getUTCDay() || 7; // Get day of the week, convert Sunday (0) to 7
+  const dayOfWeek = now.getDay() || 7; // Get day of the week, convert Sunday (0) to 7
   if (dayOfWeek !== 1) {
-    now.setUTCDate(now.getUTCDate() - dayOfWeek + 1); // Adjust to previous Monday
+    now.setUTCDate(now.getDate() - dayOfWeek + 1); // Adjust to previous Monday
   }
-  now.setUTCHours(0, 0, 0, 0);
+  now.setHours(0, 0, 0, 0);
   return now.toISOString();
 };
 
 export const getStartOfMonthUTC = () => {
   const now = new Date();
-  now.setUTCDate(1); // Set to the first day of the current month
-  now.setUTCHours(0, 0, 0, 0);
+  now.setDate(1); // Set to the first day of the current month
+  now.setHours(0, 0, 0, 0);
   return now.toISOString();
 };
 

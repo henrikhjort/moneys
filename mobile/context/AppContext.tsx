@@ -6,8 +6,8 @@ import ViewPeriod from '../types/ViewPeriod';
 
 import getEntries from '../api/getEntries';
 import deleteEntry from '../api/deleteEntry';
+import { formatToHelsinkiTime } from '../utils/helpers';
 import { useUserContext } from './UserContext';
-import { useThemeContext } from './ThemeContext';
 
 interface UserContextProps {
   entries: Entry[];
@@ -37,6 +37,7 @@ interface AppProviderProps {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   const [entries, setEntries] = useState<Entry[]>([]);
+  //console.log(entries);
   const [currentScreen, setCurrentScreen] = useState<Screen>(Screen.INPUT);
   const [viewPeriod, setViewPeriod] = useState<ViewPeriod>(ViewPeriod.Today);
   const [cumulativeAmount, setCumulativeAmount] = useState<number>(0);
@@ -58,17 +59,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   useEffect(() => {
     const today = new Date();
-    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endDate = new Date(startDate);
-    endDate.setDate(endDate.getDate() + 1);
-
-    const entriesToday = entries.filter((entry) => {
+    // Filter entries that are not today.
+    const filtered = entries.filter((entry) => {
       const entryDate = new Date(entry.createdAt);
-      return entryDate >= startDate && entryDate < endDate;
+      return entryDate.getDate() === today.getDate() && entryDate.getMonth() === today.getMonth() && entryDate.getFullYear() === today.getFullYear();
     });
-
-    const eurosSpentToday = entriesToday.reduce((acc, entry) => acc + entry.amount, 0);
-    setEurosSpentToday(eurosSpentToday);
+    const spendingToday = filtered.reduce((acc, entry) => acc + entry.amount, 0);
+    setEurosSpentToday(spendingToday);
   }, [entries]);
 
 

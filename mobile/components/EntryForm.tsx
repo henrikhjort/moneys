@@ -105,7 +105,7 @@ const EntryForm = () => {
     const data = {
       amount: amount,
       category: category,
-      createdAt: new Date().toUTCString(),
+      createdAt: new Date().toISOString(),
     };
     try {
       if (!userId) return;

@@ -1,6 +1,7 @@
 import config from "../config";
 import type { Entry } from "../types/Entry";
 import ViewPeriod from "../types/ViewPeriod";
+import { formatToHelsinkiTime } from "../utils/helpers";
 
 const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: string) => {
   try {
