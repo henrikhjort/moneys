@@ -17,6 +17,7 @@ import { getDefaultCategories } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple, placeholder } from '../styles/colors';
 
 type CategoryPickerProps = {
   label?: string;
@@ -141,7 +142,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-          <View style={styles.hands}>
+          <View>
             {renderHands()}
           </View>
             <TouchableOpacity
@@ -160,7 +161,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
               style={styles.picker}
             >
               {categoryOptions.map((option, index) => (
-                <Picker.Item key={index} label={translateCategory(option.label) || ''} value={option.value} />
+                <Picker.Item color={theme === 'light' ? black : white} key={index} label={translateCategory(option.label) || ''} value={option.value} />
               ))}
             </Picker>
           </View>
@@ -179,18 +180,18 @@ const getStyles = (theme: string) => StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   touchable: {
     height: 40,
     borderWidth: 1,
     justifyContent: 'center',
     paddingHorizontal: 10,
-    borderColor: theme === 'light' ? 'black' : 'white',
+    borderColor: theme === 'light' ? black : white,
   },
   touchableText: {
     fontSize: 16,
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   modalView: {
     flex: 1,
@@ -201,18 +202,18 @@ const getStyles = (theme: string) => StyleSheet.create({
   picker: {
     width: '100%',
     height: 200,
-    backgroundColor: 'white',
+    backgroundColor: theme === 'light' ? white : secondaryBlack,
     marginTop: -50,
   },
   placeholderText: {
     fontSize: 16,
-    color: '#C7C7CD',
+    color: placeholder,
   },
   overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, .3)',
+    backgroundColor: theme === 'light' ? 'rgba(0, 0, 0, .3)' : 'rgba(0, 0, 0, 0.2)',
   },
   modalContent: {
     display: 'flex',
@@ -223,9 +224,6 @@ const getStyles = (theme: string) => StyleSheet.create({
     overflow: 'hidden',
     marginTop: 100,
   },
-  hands: {
-    
-  },
   closeButton: {
     position: 'absolute',
     top: 10,
@@ -235,77 +233,7 @@ const getStyles = (theme: string) => StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  inputDisabled: {
-    color: '#C7C7CD',
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    marginBottom: 16,
-  },
-  label: {
-    marginBottom: 8,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  touchable: {
-    height: 40,
-    borderWidth: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-  },
-  touchableText: {
-    fontSize: 16,
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 120,
-  },
-  picker: {
-    width: '100%',
-    height: 200,
-    backgroundColor: 'white',
-    marginTop: -50,
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: '#C7C7CD',
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-  },
-  modalContent: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '80%',
-    borderRadius: 10,
-    overflow: 'hidden',
-    marginTop: 100,
-  },
-  hands: {
-    
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: 10,
-    zIndex: 1,
-  },
-  closeButtonText: {
-    fontSize: 16,
-    color: '#333',
+    color: theme === 'light' ? black : white,
     fontWeight: 'bold',
   },
   inputDisabled: {

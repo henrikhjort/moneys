@@ -6,3 +6,5 @@ export const secondaryBlack = '#333';
 
 export const purple = '#bb86fc';
 export const secondaryPurple = '#825db0';
+
+export const placeholder = '#C7C7CD';

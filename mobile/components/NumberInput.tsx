@@ -3,6 +3,7 @@ import { TextInput, View, Text, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { useThemeContext } from '../context/ThemeContext';
+import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple, placeholder } from '../styles/colors';
 
 type NumberInputProps = {
   label?: string;
@@ -37,7 +38,7 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
         value={valueToString(amount)}
         onChangeText={handleChange}
         placeholder={t('amountPlaceholder')}
-        placeholderTextColor={theme === 'light' ? '#999' : '#CCC'}
+        placeholderTextColor={placeholder}
       />
     </View>
   );
@@ -52,14 +53,14 @@ const getStyles = (theme: string) => StyleSheet.create({
     marginBottom: 8,
     fontSize: 16,
     fontWeight: 'bold',
-    color: theme === 'light' ? '#121212' : 'white',
+    color: theme === 'light' ? black : white,
   },
   input: {
     height: 40,
     borderWidth: 1,
     padding: 10,
-    borderColor: theme === 'light' ? 'black' : 'white',
-    color: theme === 'light' ? '#121212' : 'white',
+    borderColor: theme === 'light' ? black : white,
+    color: theme === 'light' ? black : white,
     fontSize: 16,
   },
   inputDisabled: {
