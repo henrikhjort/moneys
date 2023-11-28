@@ -62,6 +62,7 @@ const EntryForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buttonTitle, setButtonTitle] = useState(t('submit'));
   const [hands, setHands] = useState<Hands>(Hands.LEFT);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const amountInputAnim = useRef(new Animated.Value(0)).current;
   const categoryInputAnim = useRef(new Animated.Value(0)).current;
@@ -213,7 +214,7 @@ const EntryForm = () => {
           if (prevHands === Hands.RIGHT) return Hands.LEFT;
           return Hands.LEFT;
         });
-      }, 250);
+      }, 100);
     }
 
     return () => {
@@ -246,16 +247,18 @@ const EntryForm = () => {
   const renderHands = () => {
     if (theme === 'light') {
       if (isModalOpen) {
-        return renderLightModeHands();
+        if (isScrolling) {
+          return renderLightModeHands();
+        } else return <SvgXml xml={murmelHandsXml} width="200" height="100" />
       } else {
         return <SvgXml xml={murmelHandsXml} width="200" height="100" />
       }
     }
     else {
       if (isModalOpen) {  
-        return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
-      } else {
         return renderDarkModeHands();
+      } else {
+        return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
       }
     }
   }
@@ -277,6 +280,7 @@ const EntryForm = () => {
             onValueChange={setCategory}
             disabled={isLoading}
             setIsModalOpen={setIsModalOpen}
+            setIsScrolling={setIsScrolling}
           />
         </Animated.View>
         <Button title={buttonTitle} onPress={handleSubmit} style={buttonStyle} isLoading={isLoading} />

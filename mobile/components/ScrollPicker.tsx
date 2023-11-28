@@ -2,7 +2,7 @@ import React, { useState, useRef, RefObject } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { white, black, placeholder, purple } from '../styles/colors';
+import { white, black, placeholder, purple, secondaryWhite } from '../styles/colors';
 
 import { useThemeContext } from '../context/ThemeContext';
 
@@ -11,9 +11,10 @@ type ScrollPickerProps = {
   handleClose: () => void;
   onValueChange: (value: string) => void;
   selectedValue: string | null;
+  setIsScrolling: (value: boolean) => void;
 };
 
-const ScrollPicker = ({ data, handleClose, onValueChange, selectedValue }: ScrollPickerProps) => {
+const ScrollPicker = ({ data, handleClose, onValueChange, setIsScrolling }: ScrollPickerProps) => {
   const { t } = useTranslation();
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
@@ -37,10 +38,15 @@ const ScrollPicker = ({ data, handleClose, onValueChange, selectedValue }: Scrol
   }
   
   const handleScroll = (event: any) => {
+    setIsScrolling(true);
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / itemHeight);
     if (index > data.length - 1) return;
     setSelectedIndex(index);
+  };
+
+  const handleScrollEnd = () => {
+    setIsScrolling(false);
   };
 
   const translateCategory = (category: string | null) => {
@@ -66,6 +72,8 @@ const ScrollPicker = ({ data, handleClose, onValueChange, selectedValue }: Scrol
         snapToInterval={itemHeight}
         decelerationRate="fast"
         onScroll={handleScroll}
+        onScrollEndDrag={handleScrollEnd}         // Add this
+        onMomentumScrollEnd={handleScrollEnd} 
         scrollEventThrottle={16}
       >
         {data.map((item, index) => (
@@ -125,7 +133,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    color: placeholder,
+    color: theme === 'light' ? placeholder : secondaryWhite,
   },
   selectedItemText: {
     fontSize: 20,

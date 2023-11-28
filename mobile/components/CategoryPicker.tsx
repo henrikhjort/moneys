@@ -16,9 +16,10 @@ type CategoryPickerProps = {
   onValueChange: (value: string | null) => void;
   disabled?: boolean;
   setIsModalOpen: (value: boolean) => void;
+  setIsScrolling: (value: boolean) => void;
 }
 
-const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
+const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen, setIsScrolling }) => {
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const { t } = useTranslation();
@@ -85,6 +86,7 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
               handleClose={closeModal}
               onValueChange={onValueChange}
               selectedValue={selectedValue}
+              setIsScrolling={setIsScrolling}
             />
           </View>
         </View>
