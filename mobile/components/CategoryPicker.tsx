@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { SvgXml } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
 
-import murmelHandsXml from '../assets/murmelHands';
-import darkModeHandsXml from '../assets/darkMode/darkModeHands';
-
-import murmelHandsLeftXml from '../assets/murmelHandsLeft';
-import darkModeHandsLeftXml from '../assets/darkMode/darkModeHandsLeft';
-
-import murmelHandsRightXml from '../assets/murmelHandsRight';
-import darkModeHandsRightXml from '../assets/darkMode/darkModeHandsRight';
+import ScrollPicker from './ScrollPicker';
 
 import { getDefaultCategories } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
-import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple, placeholder } from '../styles/colors';
+import { white, black, secondaryBlack, placeholder } from '../styles/colors';
 
 type CategoryPickerProps = {
   label?: string;
@@ -25,50 +16,22 @@ type CategoryPickerProps = {
   onValueChange: (value: string | null) => void;
   disabled?: boolean;
   setIsModalOpen: (value: boolean) => void;
+  setIsScrolling: (value: boolean) => void;
 }
 
-enum Hands {
-  LEFT = 'left',
-  RIGHT = 'right',
-};
-
-const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
+const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen, setIsScrolling }) => {
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const { t } = useTranslation();
   const { setIsBrowsingCategories } = useAppContext();
   const { customCategories } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
-  const [hands, setHands] = useState<Hands>(Hands.LEFT);
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const defaultCategories = getDefaultCategories();
     setCategories([...defaultCategories, ...customCategories]);
   }, [customCategories]);
-
-  useEffect(() => {
-    let intervalId: any;
-
-    if (modalVisible) {
-      intervalId = setInterval(() => {
-        setHands(prevHands => {
-          if (prevHands === Hands.LEFT) return Hands.RIGHT;
-          if (prevHands === Hands.RIGHT) return Hands.LEFT;
-          return Hands.LEFT;
-        });
-      }, 250);
-    }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [modalVisible]);
-
-  const categoryOptions = categories.map(category => ({
-    label: category,
-    value: category,
-  }));
 
   const closeModal = () => {
     setModalVisible(false);
@@ -77,37 +40,6 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   }
 
   const isPlaceholder = selectedValue === null;
-
-  const renderLightModeHands = () => {
-    switch (hands) {
-      case Hands.LEFT:
-        return <SvgXml xml={murmelHandsLeftXml} width="200" height="150" />;
-      case Hands.RIGHT:
-        return <SvgXml xml={murmelHandsRightXml} width="200" height="150" />;
-      default:
-        return <SvgXml xml={murmelHandsXml} width="200" height="150" />;
-    }
-  }
-
-  const renderDarkModeHands = () => {
-    switch (hands) {
-      case Hands.LEFT:
-        return <SvgXml xml={darkModeHandsLeftXml} width="200" height="150" />;
-      case Hands.RIGHT:
-        return <SvgXml xml={darkModeHandsRightXml} width="200" height="150" />;
-      default:
-        return <SvgXml xml={darkModeHandsXml} width="200" height="150" />;
-    }
-  }
-
-  const renderHands = () => {
-    if (theme === 'light') {
-      return renderLightModeHands();
-    }
-    else {
-      return renderDarkModeHands();
-    }
-  }
 
   const translateCategory = (category: string | null) => {
     if (!category) return null;
@@ -143,28 +75,19 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-          <View>
-            {renderHands()}
-          </View>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => closeModal()}
             >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            <Picker
-              enabled={!disabled}
+            <ScrollPicker
+              data={categories}
+              handleClose={closeModal}
+              onValueChange={onValueChange}
               selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) => {
-                onValueChange(itemValue);
-                closeModal();
-              }}
-              style={styles.picker}
-            >
-              {categoryOptions.map((option, index) => (
-                <Picker.Item color={theme === 'light' ? black : white} key={index} label={translateCategory(option.label) || ''} value={option.value} />
-              ))}
-            </Picker>
+              setIsScrolling={setIsScrolling}
+            />
           </View>
         </View>
       </Modal>
@@ -198,7 +121,6 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 120,
   },
   picker: {
     width: '100%',
@@ -214,7 +136,8 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme === 'light' ? 'rgba(0, 0, 0, .3)' : 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: theme === 'light' ? 'rgba(0, 0, 0, .3)' : 'rgba(0, 0, 0, 0.5)',
+    zIndex: 9,
   },
   modalContent: {
     display: 'flex',
@@ -223,7 +146,8 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     width: '80%',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 100,
+    marginTop: 300,
+    backgroundColor: theme === 'light' ? white : secondaryBlack,
   },
   closeButton: {
     position: 'absolute',
