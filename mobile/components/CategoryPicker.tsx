@@ -126,7 +126,6 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     width: '100%',
     height: 200,
     backgroundColor: theme === 'light' ? white : secondaryBlack,
-    marginTop: -50,
   },
   placeholderText: {
     fontSize: 16,
@@ -146,7 +145,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     width: '80%',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 300,
+    marginTop: 160,
     backgroundColor: theme === 'light' ? white : secondaryBlack,
   },
   closeButton: {

@@ -1,6 +1,7 @@
 import React, { useState, useRef, RefObject } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import * as Haptics from 'expo-haptics';
 
 import { white, black, placeholder, purple, secondaryWhite } from '../styles/colors';
 
@@ -20,6 +21,7 @@ const ScrollPicker = ({ data, handleClose, onValueChange, setIsScrolling }: Scro
   const styles = getStyles(theme);
   const scrollViewRef: RefObject<ScrollView> = useRef(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [lastSelectedIndex, setLastSelectedIndex] = useState(0);
 
   const itemHeight = 60;
   const displayHeight = 200; // Height of the area where items are displayed
@@ -41,6 +43,11 @@ const ScrollPicker = ({ data, handleClose, onValueChange, setIsScrolling }: Scro
     setIsScrolling(true);
     const yOffset = event.nativeEvent.contentOffset.y;
     const index = Math.round(yOffset / itemHeight);
+    if (index >= 0 && index < data.length && index !== lastSelectedIndex) {
+      setSelectedIndex(index);
+      setLastSelectedIndex(index);
+      Haptics.selectionAsync();
+    }
     if (index > data.length - 1) return;
     setSelectedIndex(index);
   };
@@ -72,7 +79,7 @@ const ScrollPicker = ({ data, handleClose, onValueChange, setIsScrolling }: Scro
         snapToInterval={itemHeight}
         decelerationRate="fast"
         onScroll={handleScroll}
-        onScrollEndDrag={handleScrollEnd}         // Add this
+        onScrollEndDrag={handleScrollEnd}
         onMomentumScrollEnd={handleScrollEnd} 
         scrollEventThrottle={16}
       >
