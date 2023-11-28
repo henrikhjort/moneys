@@ -31,4 +31,6 @@ export default {
   dark_mode: 'Dark mode',
   light_mode: 'Light mode',
   back: 'Back',
+  listView: 'List',
+  graphView: 'Graph',
 }

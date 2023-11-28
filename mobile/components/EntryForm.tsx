@@ -43,7 +43,7 @@ const EntryForm = () => {
   const [buttonStyle, setButtonStyle] = useState({});
   const { entries, setEntries, eurosSpentToday } = useAppContext();
   const { userId, customCategories } = useUserContext();
-  const [amount, setAmount] = useState<number | null>(null);
+  const [amount, setAmount] = useState<string | null>(null);
   const [category, setCategory] = useState<string | null>(null);
   const [isMurmelAngry, setIsMurmelAngry] = useState(false);
   const [isMurmelHappy, setIsMurmelHappy] = useState(false);
@@ -94,22 +94,28 @@ const EntryForm = () => {
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
+    const hasMultipleDecimals = amount && amount.split(',').length > 2;
+    if (!amount || hasMultipleDecimals) {
+      setIsMurmelAngry(true);
+      shakeAnimation(amountInputAnim);
+      return;
+    }
     if (!amount) {
       shakeAnimation(amountInputAnim);
     }
     if (!category) {
       shakeAnimation(categoryInputAnim);
     }
-    if (!amount || !category) {
+    if (!amount || !category || hasMultipleDecimals) {
       setIsMurmelAngry(true);
       return;
     }
-    const data = {
-      amount: amount,
-      category: category,
-      createdAt: new Date().toISOString(),
-    };
     try {
+      const data = {
+        amount: parseFloat(amount.replace(',', '.')),
+        category: category,
+        createdAt: new Date().toISOString(),
+      };
       if (!userId) return;
       setIsLoading(true);
       const createdEntry = await createEntry(data, userId);

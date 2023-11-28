@@ -4,10 +4,10 @@ import { ScrollView, View, StyleSheet, RefreshControl } from 'react-native';
 import ViewPeriodSelector from './ViewPeriodSelector';
 import Summary from './Summary';
 import EntryListItem from './EntryListItem';
+import DataSelector from './DataSelector';
 
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
-import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 const EntryList = () => {
   const { theme } = useThemeContext();
@@ -23,9 +23,15 @@ const EntryList = () => {
 
   return (
     <View style={styles.container}>
-      <ViewPeriodSelector />
       <Summary />
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ViewPeriodSelector />
+      <DataSelector />
+      <ScrollView
+        indicatorStyle={theme === 'light' ? 'black' : 'white'}
+        refreshControl={<RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh} 
+      />}>
         {entries.map((entry, index) => (
           <EntryListItem key={index} entry={entry} />
         ))}

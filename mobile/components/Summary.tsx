@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
 import { white, black } from '../styles/colors';
+import { formatNumber } from '../utils/helpers';
 
 const Summary = () => {
   const { theme } = useThemeContext();
@@ -14,7 +15,7 @@ const Summary = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{t('money_spent')} {t(viewPeriod).toLowerCase()} </Text>
-      <Text style={styles.text}>{cumulativeAmount} €</Text>
+      <Text style={styles.text}>{formatNumber(cumulativeAmount)} €</Text>
     </View>
   );
 };

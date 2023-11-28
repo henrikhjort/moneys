@@ -7,8 +7,8 @@ import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple, 
 
 type NumberInputProps = {
   label?: string;
-  amount: number | null;
-  setAmount: (amount: number | null) => void;
+  amount: string | null;
+  setAmount: (amount: string | null) => void;
   disabled?: boolean;
 }
 
@@ -16,17 +16,10 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const { t } = useTranslation();
+
   const handleChange = (text: string) => {
-    const numericValue = text.replace(/[^0-9]/g, ''); // Ensures only numbers are entered
-    setAmount(valueToNumber(numericValue));
+    setAmount(text);
   };
-
-  const valueToString = (value: number | null) => (value === null ? '' : value.toString());
-
-  const valueToNumber = (value: string) => {
-    const numericValue = value.replace(/[^0-9]/g, ''); // Ensures only numbers are entered
-    return numericValue === '' ? null : parseInt(numericValue, 10);
-  }
 
   return (
     <View style={styles.container}>
@@ -35,10 +28,11 @@ const NumberInput: React.FC<NumberInputProps> = ({ label, amount, setAmount, dis
         editable={!disabled}
         style={[styles.input, disabled && styles.inputDisabled]}
         keyboardType="numeric"
-        value={valueToString(amount)}
+        value={amount?.toString() || ''}
         onChangeText={handleChange}
         placeholder={t('amountPlaceholder')}
         placeholderTextColor={placeholder}
+        maxLength={8}
       />
     </View>
   );

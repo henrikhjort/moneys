@@ -16,7 +16,8 @@ import { useThemeContext } from '../context/ThemeContext';
 
 const MurmelFromBelow = () => {
   const { theme } = useThemeContext();
-  const { isRefreshing, entryDeleted } = useAppContext();
+  const styles = getStyles(theme);
+  const { isRefreshing, entryDeleted, dataView } = useAppContext();
   const bounceAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const MurmelFromBelow = () => {
   };
 
   const renderMurmelSvg = () => {
+    if (dataView === 'graph') return;
     if (theme === 'light') {
       return renderLightMode();
     } else {
@@ -74,17 +76,17 @@ const MurmelFromBelow = () => {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={{ transform: [{ translateY: bounceAnim }] }}>
+      <Animated.View style={[{ transform: [{ translateY: bounceAnim }] }]}>
         {renderMurmelSvg()}
       </Animated.View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (theme: string | null) => StyleSheet.create({
   container: {
     justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
   },
 });
 

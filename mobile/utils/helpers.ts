@@ -60,3 +60,34 @@ export const getDefaultCategories = (): string[] => {
     'Other ❓',
   ];
 };
+
+export const formatNumber = (num: number): string => {
+    if (isNaN(num)) {
+        return "";
+    }
+
+    if (num <= 10000) {
+        return formatAmount(num);
+    } else if (num < 1000000) {
+        return (num / 1000).toFixed(0) + 'k';
+    } else {
+        return (num / 1000000).toFixed(0) + 'M';
+    }
+}
+
+export const formatAmount = (amount: number): string => {
+  if (amount == null) {
+    return '';
+  }
+
+  try {
+    // Truncate to 2 decimal places without rounding
+    const truncated = Math.ceil(amount * 100) / 100;
+
+    // Convert to string and replace dot with comma
+    return truncated.toFixed(2).replace('.', ',');
+  } catch (error) {
+    return '';
+  }
+};
+

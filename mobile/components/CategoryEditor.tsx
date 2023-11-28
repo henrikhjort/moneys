@@ -101,11 +101,12 @@ const CategoryEditor = () => {
           value={categoryName}
           onChangeText={setCategoryName}
           placeholderTextColor={placeholder}
+          maxLength={25}
         />
       </Animated.View>
       <Button title={buttonTitle} onPress={handleSave} style={buttonStyle} />
       
-      <ScrollView style={styles.scrollView}>
+      <ScrollView indicatorStyle={theme === 'light' ? 'black' : 'white'} style={styles.scrollView}>
         {customCategories.map((category, index) => (
           <CategoryListItem key={index} category={category} />
         ))}

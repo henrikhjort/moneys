@@ -34,4 +34,6 @@ export default {
   theme_stats_dark: '% käyttäjistä elää pimeydessä',
   theme_stats_light: '% käyttäjistä elää valossa',
   back: 'Takaisin',
+  listView: 'Lista',
+  graphView: 'Kuvaaja',
 }

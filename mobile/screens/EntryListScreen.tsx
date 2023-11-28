@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import EntryList from '../components/EntryList';
 import MurmelFromBelow from '../components/MurmelFromBelow';
+import DataSelector from '../components/DataSelector';
 
 const EntryListScreen = () => {
 
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   },
   murmel: {
     flex: 0.22,
-    marginBottom: -25,
+    marginBottom: 0,
   },
 });
 

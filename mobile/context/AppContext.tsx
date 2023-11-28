@@ -6,7 +6,6 @@ import ViewPeriod from '../types/ViewPeriod';
 
 import getEntries from '../api/getEntries';
 import deleteEntry from '../api/deleteEntry';
-import { formatToHelsinkiTime } from '../utils/helpers';
 import { useUserContext } from './UserContext';
 
 interface UserContextProps {
@@ -27,6 +26,8 @@ interface UserContextProps {
   setIsBrowsingCategories: (isBrowsingCategories: boolean) => void;
   isSettingsOpen: boolean;
   setIsSettingsOpen: (isSettingsOpen: boolean) => void;
+  dataView: string;
+  setDataView: (dataView: string) => void;
 }
 
 export const AppContext = createContext<UserContextProps | undefined>(undefined);
@@ -45,6 +46,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
   const [entryDeleted, setEntryDeleted] = useState<boolean>(false);
   const [isBrowsingCategories, setIsBrowsingCategories] = useState<boolean>(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+  const [dataView, setDataView] = useState<string>('list');
 
   const { userId } = useUserContext();
 
@@ -123,6 +125,8 @@ export const AppProvider = ({ children }: AppProviderProps) => {
       setIsBrowsingCategories,
       isSettingsOpen,
       setIsSettingsOpen,
+      dataView,
+      setDataView,
     }}>
       {children}
     </AppContext.Provider>

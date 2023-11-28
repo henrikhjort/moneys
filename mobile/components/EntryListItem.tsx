@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { formatToHelsinkiTime } from '../utils/helpers';
+import { formatToHelsinkiTime, formatAmount } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 
 import type { Entry } from '../types/Entry';
 
 import { useThemeContext } from '../context/ThemeContext';
-import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
+import { white, black } from '../styles/colors';
 
 type EntryListItemProps = {
   entry: Entry;
@@ -31,7 +31,7 @@ const EntryListItem = ({ entry }: EntryListItemProps) => {
     <View style={styles.itemContainer}>
       <View style={styles.dataContainer}>
         <Text style={styles.dataText}>{formatToHelsinkiTime(entry.createdAt)}</Text>
-        <Text style={styles.dataText}>{entry.amount} €</Text>
+        <Text style={styles.dataText}>{formatAmount(entry.amount)} €</Text>
         <Text style={styles.dataText}>{t(entry.category)}</Text>
       </View>
       <View style={styles.deleteContainer}>
