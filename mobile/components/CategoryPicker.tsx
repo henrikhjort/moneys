@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import { SvgXml } from 'react-native-svg';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard } from 'react-native';
 import { useTranslation } from 'react-i18next';
-
-import murmelHandsXml from '../assets/murmelHands';
-import darkModeHandsXml from '../assets/darkMode/darkModeHands';
-
-import murmelHandsLeftXml from '../assets/murmelHandsLeft';
-import darkModeHandsLeftXml from '../assets/darkMode/darkModeHandsLeft';
-
-import murmelHandsRightXml from '../assets/murmelHandsRight';
-import darkModeHandsRightXml from '../assets/darkMode/darkModeHandsRight';
 
 import ScrollPicker from './ScrollPicker';
 
@@ -29,11 +18,6 @@ type CategoryPickerProps = {
   setIsModalOpen: (value: boolean) => void;
 }
 
-enum Hands {
-  LEFT = 'left',
-  RIGHT = 'right',
-};
-
 const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, onValueChange, disabled, setIsModalOpen }) => {
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
@@ -41,31 +25,12 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   const { setIsBrowsingCategories } = useAppContext();
   const { customCategories } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
-  const [hands, setHands] = useState<Hands>(Hands.LEFT);
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     const defaultCategories = getDefaultCategories();
     setCategories([...defaultCategories, ...customCategories]);
   }, [customCategories]);
-
-  useEffect(() => {
-    let intervalId: any;
-
-    if (modalVisible) {
-      intervalId = setInterval(() => {
-        setHands(prevHands => {
-          if (prevHands === Hands.LEFT) return Hands.RIGHT;
-          if (prevHands === Hands.RIGHT) return Hands.LEFT;
-          return Hands.LEFT;
-        });
-      }, 250);
-    }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [modalVisible]);
 
   const closeModal = () => {
     setModalVisible(false);
@@ -74,37 +39,6 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
   }
 
   const isPlaceholder = selectedValue === null;
-
-  const renderLightModeHands = () => {
-    switch (hands) {
-      case Hands.LEFT:
-        return <SvgXml xml={murmelHandsLeftXml} width="200" height="150" />;
-      case Hands.RIGHT:
-        return <SvgXml xml={murmelHandsRightXml} width="200" height="150" />;
-      default:
-        return <SvgXml xml={murmelHandsXml} width="200" height="150" />;
-    }
-  }
-
-  const renderDarkModeHands = () => {
-    switch (hands) {
-      case Hands.LEFT:
-        return <SvgXml xml={darkModeHandsLeftXml} width="200" height="150" />;
-      case Hands.RIGHT:
-        return <SvgXml xml={darkModeHandsRightXml} width="200" height="150" />;
-      default:
-        return <SvgXml xml={darkModeHandsXml} width="200" height="150" />;
-    }
-  }
-
-  const renderHands = () => {
-    if (theme === 'light') {
-      return renderLightModeHands();
-    }
-    else {
-      return renderDarkModeHands();
-    }
-  }
 
   const translateCategory = (category: string | null) => {
     if (!category) return null;

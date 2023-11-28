@@ -14,7 +14,6 @@ type ScrollPickerProps = {
 };
 
 const ScrollPicker = ({ data, handleClose, onValueChange, selectedValue }: ScrollPickerProps) => {
-  console.log(data);
   const { t } = useTranslation();
   const { theme } = useThemeContext();
   const styles = getStyles(theme);

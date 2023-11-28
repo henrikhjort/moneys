@@ -21,6 +21,12 @@ import darkModeLegsFat4Xml from '../assets/darkMode/darkModeLegsFat4';
 import murmelHandsXml from '../assets/murmelHands';
 import darkModeHandsXml from '../assets/darkMode/darkModeHands';
 
+import murmelHandsLeftXml from '../assets/murmelHandsLeft';
+import darkModeHandsLeftXml from '../assets/darkMode/darkModeHandsLeft';
+
+import murmelHandsRightXml from '../assets/murmelHandsRight';
+import darkModeHandsRightXml from '../assets/darkMode/darkModeHandsRight';
+
 import Murmel from './Murmel';
 import Button from './Button';
 import NumberInput from './NumberInput';
@@ -34,6 +40,11 @@ import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
 import { error, errorDark, success, successDark } from '../styles/colors';
+
+enum Hands {
+  LEFT = 'left',
+  RIGHT = 'right',
+};
 
 const EntryForm = () => {
   const { theme } = useThemeContext();
@@ -50,6 +61,7 @@ const EntryForm = () => {
   const [isMurmelGreedy, setIsMurmelGreedy] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [buttonTitle, setButtonTitle] = useState(t('submit'));
+  const [hands, setHands] = useState<Hands>(Hands.LEFT);
 
   const amountInputAnim = useRef(new Animated.Value(0)).current;
   const categoryInputAnim = useRef(new Animated.Value(0)).current;
@@ -191,12 +203,60 @@ const EntryForm = () => {
     }
   }
 
+  useEffect(() => {
+    let intervalId: any;
+
+    if (isModalOpen) {
+      intervalId = setInterval(() => {
+        setHands(prevHands => {
+          if (prevHands === Hands.LEFT) return Hands.RIGHT;
+          if (prevHands === Hands.RIGHT) return Hands.LEFT;
+          return Hands.LEFT;
+        });
+      }, 250);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isModalOpen]);
+
+  const renderLightModeHands = () => {
+    switch (hands) {
+      case Hands.LEFT:
+        return <SvgXml xml={murmelHandsLeftXml} width="200" height="150" />;
+      case Hands.RIGHT:
+        return <SvgXml xml={murmelHandsRightXml} width="200" height="150" />;
+      default:
+        return <SvgXml xml={murmelHandsXml} width="200" height="150" />;
+    }
+  }
+
+  const renderDarkModeHands = () => {
+    switch (hands) {
+      case Hands.LEFT:
+        return <SvgXml xml={darkModeHandsLeftXml} width="200" height="150" />;
+      case Hands.RIGHT:
+        return <SvgXml xml={darkModeHandsRightXml} width="200" height="150" />;
+      default:
+        return <SvgXml xml={darkModeHandsXml} width="200" height="150" />;
+    }
+  }
+
   const renderHands = () => {
     if (theme === 'light') {
-      return <SvgXml xml={murmelHandsXml} width="200" height="100" />
+      if (isModalOpen) {
+        return renderLightModeHands();
+      } else {
+        return <SvgXml xml={murmelHandsXml} width="200" height="100" />
+      }
     }
     else {
-      return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
+      if (isModalOpen) {  
+        return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
+      } else {
+        return renderDarkModeHands();
+      }
     }
   }
 
@@ -208,7 +268,7 @@ const EntryForm = () => {
           <NumberInput label={`${t('amount')} €`} amount={amount} setAmount={setAmount} disabled={isLoading} />
         </Animated.View>
         <View style={styles.handsContainer}>
-          {!isModalOpen && renderHands()}
+          {renderHands()}
         </View>
         <Animated.View style={[{ transform: [{ translateX: categoryInputAnim }] }, styles.animatedContainer]}>
           <CategoryPicker 
