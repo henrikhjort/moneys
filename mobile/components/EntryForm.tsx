@@ -255,8 +255,10 @@ const EntryForm = () => {
       }
     }
     else {
-      if (isModalOpen) {  
-        return renderDarkModeHands();
+      if (isModalOpen) {
+        if (isScrolling) {
+          return renderDarkModeHands();
+        } else return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
       } else {
         return <SvgXml xml={darkModeHandsXml} width="200" height="100" />
       }
