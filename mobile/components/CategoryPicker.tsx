@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { SvgXml } from 'react-native-svg';
 import { useTranslation } from 'react-i18next';
@@ -13,11 +13,13 @@ import darkModeHandsLeftXml from '../assets/darkMode/darkModeHandsLeft';
 import murmelHandsRightXml from '../assets/murmelHandsRight';
 import darkModeHandsRightXml from '../assets/darkMode/darkModeHandsRight';
 
+import ScrollPicker from './ScrollPicker';
+
 import { getDefaultCategories } from '../utils/helpers';
 import { useAppContext } from '../context/AppContext';
 import { useUserContext } from '../context/UserContext';
 import { useThemeContext } from '../context/ThemeContext';
-import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple, placeholder } from '../styles/colors';
+import { white, black, secondaryBlack, placeholder } from '../styles/colors';
 
 type CategoryPickerProps = {
   label?: string;
@@ -64,11 +66,6 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       if (intervalId) clearInterval(intervalId);
     };
   }, [modalVisible]);
-
-  const categoryOptions = categories.map(category => ({
-    label: category,
-    value: category,
-  }));
 
   const closeModal = () => {
     setModalVisible(false);
@@ -143,28 +140,18 @@ const CategoryPicker: React.FC<CategoryPickerProps> = ({ label, selectedValue, o
       >
         <View style={styles.overlay}>
           <View style={styles.modalContent}>
-          <View>
-            {renderHands()}
-          </View>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => closeModal()}
             >
               <Text style={styles.closeButtonText}>X</Text>
             </TouchableOpacity>
-            <Picker
-              enabled={!disabled}
+            <ScrollPicker
+              data={categories}
+              handleClose={closeModal}
+              onValueChange={onValueChange}
               selectedValue={selectedValue}
-              onValueChange={(itemValue, itemIndex) => {
-                onValueChange(itemValue);
-                closeModal();
-              }}
-              style={styles.picker}
-            >
-              {categoryOptions.map((option, index) => (
-                <Picker.Item color={theme === 'light' ? black : white} key={index} label={translateCategory(option.label) || ''} value={option.value} />
-              ))}
-            </Picker>
+            />
           </View>
         </View>
       </Modal>
@@ -198,7 +185,6 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 120,
   },
   picker: {
     width: '100%',
@@ -214,7 +200,8 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme === 'light' ? 'rgba(0, 0, 0, .3)' : 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: theme === 'light' ? 'rgba(0, 0, 0, .3)' : 'rgba(0, 0, 0, 0.5)',
+    zIndex: 9,
   },
   modalContent: {
     display: 'flex',
@@ -223,7 +210,8 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     width: '80%',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 100,
+    marginTop: 300,
+    backgroundColor: theme === 'light' ? white : secondaryBlack,
   },
   closeButton: {
     position: 'absolute',
