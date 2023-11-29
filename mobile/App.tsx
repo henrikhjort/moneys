@@ -5,8 +5,6 @@ import AppComponent from './components/AppComponent';
 import { AppProvider } from './context/AppContext';
 import { UserProvider } from './context/UserContext';
 import { ThemeProvider } from './context/ThemeContext';
-import BaseScreen from './screens/BaseScreen';
-import TabSelector from './components/TabSelector';
 
 export default function App() {
   return (
