@@ -2,37 +2,9 @@ import RecurringEntryModel from "../db/models/RecurringEntry";
 import type { RecurringEntry, RecurringEntryInput } from "../types/RecurringEntry";
 import EntryModel from "../db/models/Entry";
 
-const getNextDueDateFromInterval = (interval: string) => {
-  const today = new Date();
-  let nextDueDate;
-
-  switch (interval) {
-    case 'daily':
-      nextDueDate = new Date(today.setDate(today.getDate() + 1));
-      break;
-    case 'weekly':
-      nextDueDate = new Date(today.setDate(today.getDate() + 7));
-      break;
-    case 'monthly':
-      nextDueDate = new Date(today.setMonth(today.getMonth() + 1));
-      break;
-    case 'yearly':
-      nextDueDate = new Date(today.setFullYear(today.getFullYear() + 1));
-      break;
-    default:
-      return null;
-  }
-
-  // Set hours and minutes to 03:00
-  nextDueDate.setHours(3, 0, 0, 0);
-
-  return nextDueDate.toISOString();
-}
-
-
 export const createRecurringEntry = async (entry: RecurringEntryInput, userId: string) => {
   try {
-    const nextDueDate = getNextDueDateFromInterval(entry.interval);
+    const nextDueDate = getNextDueDate(entry.interval);
     if (!nextDueDate) return null;
     const data = {
       userId: userId,
