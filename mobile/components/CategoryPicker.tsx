@@ -145,7 +145,7 @@ const getStyles = (theme: string | null) => StyleSheet.create({
     width: '80%',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 160,
+    marginTop: 185,
     backgroundColor: theme === 'light' ? white : secondaryBlack,
   },
   closeButton: {
