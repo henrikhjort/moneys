@@ -95,19 +95,33 @@ export const deleteRecurringEntry = async (id: string, userId: string) => {
 
 const getNextDueDate = (interval: string) => {
   const today = new Date();
+  let nextDueDate;
+
   switch (interval) {
     case 'daily':
-      return new Date(today.setDate(today.getDate() + 1)).toISOString();
+      nextDueDate = new Date(today.setDate(today.getDate() + 1));
+      break;
     case 'weekly':
-      return new Date(today.setDate(today.getDate() + 7)).toISOString();
+      // Set to next Monday
+      nextDueDate = new Date(today.setDate(today.getDate() + ((1 + 7 - today.getDay()) % 7 || 7)));
+      break;
     case 'monthly':
-      return new Date(today.setMonth(today.getMonth() + 1)).toISOString();
+      // Set to the first day of the next month
+      nextDueDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+      break;
     case 'yearly':
-      return new Date(today.setFullYear(today.getFullYear() + 1)).toISOString();
+      // Set to the first day of the next year
+      nextDueDate = new Date(today.getFullYear() + 1, 0, 1);
+      break;
     default:
       return null;
   }
+
+  nextDueDate.setHours(1, 0, 0, 0);
+
+  return nextDueDate.toISOString();
 };
+
 
 export const processRecurringEntries = async (entries: any) => {
   try {
