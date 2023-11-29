@@ -8,7 +8,7 @@ import { useAppContext } from '../context/AppContext';
 import type { Entry } from '../types/Entry';
 
 import { useThemeContext } from '../context/ThemeContext';
-import { white, black } from '../styles/colors';
+import { white, black, gray } from '../styles/colors';
 
 type EntryListItemProps = {
   entry: Entry;
@@ -26,13 +26,14 @@ const EntryListItem = ({ entry }: EntryListItemProps) => {
     await handleDeleteEntry(id);
     setIsLoading(false);
   }
-
+  console.log(entry);
   return (
     <View style={styles.itemContainer}>
       <View style={styles.dataContainer}>
         <Text style={styles.dataText}>{formatToHelsinkiTime(entry.createdAt)}</Text>
         <Text style={styles.dataText}>{formatAmount(entry.amount)} €</Text>
         <Text style={styles.dataText}>{t(entry.category)}</Text>
+        {entry.recurring &&<Text style={[styles.dataText, styles.gray]}>{t('recurring')}</Text>}
       </View>
       <View style={styles.deleteContainer}>
         <TouchableOpacity onPress={() => deleteEntry(entry.id || '')} style={styles.deleteButton}>
@@ -66,6 +67,9 @@ const getStyles = (theme: string | null) => StyleSheet.create({
   deleteButton: {
     padding: 10,
   },
+  gray: {
+    color: gray,
+  }
 });
 
 export default EntryListItem;

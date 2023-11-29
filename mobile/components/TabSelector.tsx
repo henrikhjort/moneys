@@ -6,7 +6,7 @@ import { Screen } from '../types/Screen';
 
 import { useAppContext } from '../context/AppContext';
 import { useThemeContext } from '../context/ThemeContext';
-import { white, secondaryWhite, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
+import { white, black, secondaryBlack, purple, secondaryPurple } from '../styles/colors';
 
 const TabSelector = () => {
   const { theme } = useThemeContext();

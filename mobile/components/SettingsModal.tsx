@@ -18,10 +18,12 @@ import darkModeSettingsMurmelXml from '../assets/darkMode/darkModeSettingsMurmel
 import copyXml from '../assets/copy';
 import copyDarkXml from '../assets/darkMode/copyDark';
 import getThemeStats from '../api/getThemeStats';
+import RecurringExpenseEditor from './RecurringExpenseEditor';
 
 enum Menu {
   Root = 'Root',
   CategoryEditor = 'CategoryEditor',
+  RecurringExpenseEditor = 'RecurringExpenseEditor',
 }
 
 type ThemeStats = {
@@ -32,7 +34,7 @@ type ThemeStats = {
 const SettingsModal = () => {
   const { t } = useTranslation();
   const { isSettingsOpen, setIsSettingsOpen } = useAppContext();
-  const { userId } = useUserContext();
+  const { userId, saveRecurringEntry } = useUserContext();
   const { theme } = useThemeContext();
   const styles = getStyles(theme);
   const [menu, setMenu] = useState<Menu>(Menu.Root);
@@ -85,10 +87,13 @@ const SettingsModal = () => {
     switch (menu) {
       case Menu.CategoryEditor:
         return <CategoryEditor />;
+      case Menu.RecurringExpenseEditor:
+        return <RecurringExpenseEditor />;
       default:
         return (
           <View style={styles.menuList}>
             <Button style={styles.menuListItem} title={t('menu_categories')} onPress={() => setMenu(Menu.CategoryEditor)} />
+            <Button style={styles.menuListItem} title={t('menu_recurrences')} onPress={() => setMenu(Menu.RecurringExpenseEditor)} />
             {
               theme === 'light' ?
               <Button icon={copyIconDark} style={[styles.menuListItem, buttonStyle]} title={t('menu_copy_user_id')} onPress={handleUserIdClick} />

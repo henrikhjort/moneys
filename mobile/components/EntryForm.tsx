@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated, Image } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Keyboard, Animated } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SvgXml } from 'react-native-svg';
 

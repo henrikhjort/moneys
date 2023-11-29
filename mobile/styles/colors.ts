@@ -1,5 +1,8 @@
 export const white = 'white';
 export const secondaryWhite = '#949494';
+export const darkModeWhite = '#cccccc';
+
+export const gray = '#8a8a8a';
 
 export const black = '#121212';
 export const secondaryBlack = '#333';

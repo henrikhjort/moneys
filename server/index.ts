@@ -1,13 +1,22 @@
 import express, { Request, Response , Application } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+const cron = require('node-cron');
 
 import type { Entry } from './types/Entry';
+import type { RecurringEntry, RecurringEntryInput } from './types/RecurringEntry';
 import EntryModel from './db/models/Entry';
 import CustomCategoryModel from './db/models/CustomCategory';
 import UserThemeModel from './db/models/UserTheme';
 
 import validateEntry from './utils/validateEntry';
+import { 
+  createRecurringEntry,
+  getRecurringEntries,
+  processRecurringEntries,
+  getUsersRecurringEntries,
+  deleteRecurringEntry
+} from './utils/recurringEntry';
 import { getStartOfTodayUTC, getEndOfTodayUTC, getStartOfWeekUTC, getStartOfMonthUTC } from './utils/time';
 
 dotenv.config();
@@ -149,7 +158,7 @@ app.get('/api/entries/today', async (req: Request, res: Response) => {
         $lte: endStr
       }
     }).sort({ createdAt: -1 });
-
+    console.log(entries);
     res.status(200).json(entries);
   } catch (error) {
     console.error(error);
@@ -404,9 +413,136 @@ app.get('/api/theme', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/api/recurring_entries', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    console.log('no auth header');
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    console.log('invalid api key');
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    console.log('no user id');
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+  const entry: RecurringEntryInput = req.body;
+  const effectiveImmediately = entry.effectiveImmediately;
+  const created = await createRecurringEntry(entry, userId);
+  if (!created) {
+    res.status(500).json({ message: 'Error creating recurring entry' });
+    return;
+  }
+  if (effectiveImmediately) {
+    const entryData = {
+      userId: userId,
+      createdAt: new Date().toISOString(),
+      amount: entry.amount,
+      category: entry.category,
+      recurring: true,
+    };
+    const data = new EntryModel(entryData);
+    const dataToSave = await data.save();
+    if (!dataToSave) {
+      res.status(500).json({ message: 'Error creating entry' });
+      return;
+    }
+    res.status(200).json({recurringEntry: created, entry: dataToSave});
+    return;
+  };
+  res.status(200).json({recurringEntry: created});
+});
+
+app.get('/api/recurring_entries', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  try {
+    const recurringEntries = await getUsersRecurringEntries(userId);
+    if (!recurringEntries) {
+      res.status(500).json({ message: 'Error retrieving data' });
+      return;
+    }
+    res.status(200).json(recurringEntries);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving data', error: error });
+  }
+});
+
+app.delete('/api/recurring_entries/:id', async (req: Request, res: Response) => {
+  const authHeader = req.headers['authorization'];
+  const expectedApiKey = process.env.API_KEY;
+
+  if (!authHeader) {
+    res.status(401).json({ message: 'No authorization header' });
+    return;
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (token !== expectedApiKey) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const userId = getUserIdFromHeaders(req);
+  if (!userId) {
+    res.status(400).json({ message: 'No user ID provided' });
+    return;
+  }
+
+  const entryId = req.params.id;
+  console.log('entryId', entryId);
+
+  try {
+    const deleted = await deleteRecurringEntry(entryId, userId);
+    console.log('deleted', deleted);
+    if (!deleted) {
+      res.status(404).json({ message: 'Entry not found or does not belong to the user' });
+      return;
+    }
+    res.status(200).json({ message: 'Entry deleted', entry: deleted });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting entry', error: error });
+  }
+});
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server is running on port ${port}`);
+  cron.schedule('0 3 * * *', async () => {
+    // Logic to process recurring entries
+    const startOfToday = getStartOfTodayUTC();
+    const endOfToday = getEndOfTodayUTC();
+    const entriesDueToday = await getRecurringEntries(startOfToday, endOfToday);
+    await processRecurringEntries(entriesDueToday);
+  });
 });

@@ -1,11 +1,10 @@
 import config from "../config";
-import type { Entry } from "../types/Entry";
-import ViewPeriod from "../types/ViewPeriod";
+import type { RecurringEntry } from "../types/RecurringEntry";
 
-const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: string) => {
+const fetchRecurringEntries = async (userId: string) => {
   try {
     const { API_URL, API_KEY } = config;
-    const response = await fetch(`${API_URL}/api/entries/${viewPeriod}`, {
+    const response = await fetch(`${API_URL}/api/recurring_entries`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${API_KEY}`,
@@ -19,12 +18,14 @@ const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: s
 
     const data = await response.json();
     // Convert data to type entry.
-    const entries: Entry[] = data.map((entry: any) => ({
-      id: entry._id,
+    const entries: RecurringEntry[] = data.map((entry: any) => ({
+      _id: entry._id,
       createdAt: entry.createdAt,
+      nextDueDate: entry.nextDueDate,
       amount: entry.amount,
       category: entry.category,
-      recurring: entry.recurring,
+      interval: entry.interval,
+      status: entry.status,
     }));
 
     return entries;
@@ -33,4 +34,4 @@ const fetchEntries = async (viewPeriod: ViewPeriod = ViewPeriod.Today, userId: s
   }
 }
 
-export default fetchEntries;
+export default fetchRecurringEntries;
