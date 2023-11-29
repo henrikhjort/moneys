@@ -23,10 +23,22 @@ export const getStartOfTodayUTC = () => {
   return now.toISOString();
 };
 
+export const getStartOfDayUTC = (dateStr: string) => {
+  const date = new Date(dateStr);
+  date.setHours(0, 0, 0, 0);
+  return date.toISOString();
+};
+
 export const getEndOfTodayUTC = () => {
   const now = new Date();
   now.setHours(23, 59, 59, 999);
   return now.toISOString();
+};
+
+export const getEndOfDayUTC = (dateStr: string) => {
+  const date = new Date(dateStr);
+  date.setHours(23, 59, 59, 999);
+  return date.toISOString();
 };
 
 export const getStartOfWeekUTC = () => {

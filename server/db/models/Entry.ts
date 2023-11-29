@@ -5,6 +5,7 @@ const entrySchema = new mongoose.Schema({
   createdAt: { type: Date, required: true },
   amount: { type: Number, required: true },
   category: { type: String, required: true },
+  recurring: { type: Boolean, required: false },
 });
 
 const EntryModel = mongoose.model('Entry', entrySchema);
